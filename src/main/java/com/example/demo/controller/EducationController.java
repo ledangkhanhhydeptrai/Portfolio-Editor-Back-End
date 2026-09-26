@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/education")
+@RequestMapping("/api/public/education")
 @Tag(name = "Education")
 public class EducationController {
     @Autowired

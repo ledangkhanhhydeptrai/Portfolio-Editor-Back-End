@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/skill")
+@RequestMapping("/api/public/skill")
 @Tag(name = "Skill")
 public class SkillController {
     @Autowired

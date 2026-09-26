@@ -13,7 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/projects")
+@RequestMapping("/api/public/projects")
 @Tag(name = "Project")
 public class ProjectController {
     private final ProjectService projectService;
