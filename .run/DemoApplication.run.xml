@@ -1,11 +1,15 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="DemoApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
     <envs>
+      <env name="CLOUD_API_KEY" value="374849278972435" />
+      <env name="CLOUD_API_SECRET" value="k7gRpQkf1Xc87ZQPNhmshB17l6I" />
+      <env name="CLOUD_NAME" value="dnmk3xqy0" />
       <env name="DATABASE_URL" value="jdbc:postgresql://localhost:5433/portfolio_editor" />
       <env name="DB_PORT" value="8080" />
       <env name="DB_USERNAME" value="postgres" />
       <env name="JWT_EXPIRATION" value="3600000" />
       <env name="JWT_REFRESH_EXPIRATION" value="86400000" />
+      <env name="JWT_SECRET" value="12345678901234567890123456789012" />
     </envs>
     <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UnknownPolicyInFreeMode" />
     <module name="demo" />
