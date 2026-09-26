@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="DemoApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-    <envs>
+    <!-- <envs>
       <env name="CLOUD_API_KEY" value="374849278972435" />
       <env name="CLOUD_API_SECRET" value="k7gRpQkf1Xc87ZQPNhmshB17l6I" />
       <env name="CLOUD_NAME" value="dnmk3xqy0" />
@@ -10,7 +10,7 @@
       <env name="JWT_EXPIRATION" value="3600000" />
       <env name="JWT_REFRESH_EXPIRATION" value="86400000" />
       <env name="JWT_SECRET" value="12345678901234567890123456789012" />
-    </envs>
+    </envs> -->
     <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UnknownPolicyInFreeMode" />
     <module name="demo" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.demo.DemoApplication" />
