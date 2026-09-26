@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/experience")
+@RequestMapping("/api/public/experience")
 @Tag(name = "Experience")
 public class ExperienceController {
     @Autowired

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/social_link")
+@RequestMapping("/api/public/social_link")
 @Tag(name = "Social Link")
 public class SocialLinkController {
     @Autowired
