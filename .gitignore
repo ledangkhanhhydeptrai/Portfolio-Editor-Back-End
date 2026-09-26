@@ -14,10 +14,16 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea
+.idea/
+.run/
 *.iws
 *.iml
 *.ipr
+
+### Environment / Secrets ###
+.env
+.env.*
+!.env.example
 
 ### NetBeans ###
 /nbproject/private/
@@ -31,6 +37,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-# Local environment variables and secrets
-.env
