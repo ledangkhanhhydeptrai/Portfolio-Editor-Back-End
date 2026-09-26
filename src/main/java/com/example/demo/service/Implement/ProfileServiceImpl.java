@@ -8,7 +8,6 @@ import com.example.demo.response.ApiResponse;
 import com.example.demo.service.Interface.ProfileService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -33,4 +32,5 @@ public class ProfileServiceImpl implements ProfileService {
                 .data(response)
                 .build();
     }
+
 }
