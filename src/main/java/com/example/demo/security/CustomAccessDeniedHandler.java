@@ -38,6 +38,21 @@ public class CustomAccessDeniedHandler
                 "UTF-8"
         );
 
+        String origin =
+                request.getHeader("Origin");
+
+        if (origin != null) {
+            response.setHeader(
+                    "Access-Control-Allow-Origin",
+                    origin
+            );
+
+            response.setHeader(
+                    "Access-Control-Allow-Credentials",
+                    "true"
+            );
+        }
+
         ApiResponse<Object> apiResponse =
                 ApiResponse.builder()
                         .status(
