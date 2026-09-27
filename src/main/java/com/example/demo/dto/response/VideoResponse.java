@@ -1,5 +1,6 @@
 package com.example.demo.dto.response;
 
+import com.example.demo.Enum.VideoEnum;
 import lombok.*;
 
 import java.util.UUID;
@@ -21,7 +22,7 @@ public class VideoResponse {
 
     private String thumbnailUrl;
 
-    private String category;
+    private VideoEnum category;
 
     private String duration;
 

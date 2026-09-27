@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.example.demo.Enum.VideoEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -42,12 +43,12 @@ public class Video {
             columnDefinition = "TEXT"
     )
     private String thumbnailUrl;
-
+    @Enumerated(EnumType.STRING)
     @Column(
             name = "category",
             nullable = false
     )
-    private String category;
+    private VideoEnum category;
 
     @Column(name = "duration")
     private String duration;

@@ -1,10 +1,12 @@
 package com.example.demo.service.Implement;
 
+import com.example.demo.dto.request.UpdateVideoRequest;
 import com.example.demo.dto.request.VideoRequest;
 import com.example.demo.dto.response.CloudinaryVideoResponse;
 import com.example.demo.dto.response.VideoResponse;
 import com.example.demo.entity.User;
 import com.example.demo.entity.Video;
+import com.example.demo.exception.BadRequestException;
 import com.example.demo.mapper.VideoMapper;
 import com.example.demo.repository.VideoRepository;
 import com.example.demo.response.ApiResponse;
@@ -76,7 +78,9 @@ public class VideoServiceImpl
             VideoRequest request,
             MultipartFile videoFile,
             MultipartFile thumbnailFile
+
     ) {
+
 
         System.out.println(
                 "======================================"
@@ -130,12 +134,8 @@ public class VideoServiceImpl
                 "[STEP 2] Checking video file"
         );
 
-        if (videoFile == null) {
-
-            System.out.println(
-                    "Video file = NULL"
-            );
-
+        if (videoFile == null || videoFile.isEmpty()) {
+            throw new BadRequestException("Video file is required");
         } else {
 
             System.out.println(
@@ -179,11 +179,9 @@ public class VideoServiceImpl
                 "[STEP 3] Checking thumbnail"
         );
 
-        if (thumbnailFile == null) {
+        if (thumbnailFile == null || thumbnailFile.isEmpty()) {
 
-            System.out.println(
-                    "Thumbnail = NULL"
-            );
+            throw new BadRequestException("Thumbnail file is required");
 
         } else {
 
@@ -563,15 +561,44 @@ public class VideoServiceImpl
                 seconds
         );
     }
+
     @Override
-    public ApiResponse<VideoResponse> getVideoById(UUID id){
+    public ApiResponse<VideoResponse> getVideoById(UUID id) {
         Video video = videoRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("Video does not exist"));
+                .orElseThrow(() -> new BadRequestException("Video does not exist"));
         VideoResponse response = videoMapper.toVideoResponse(video);
         return ApiResponse.<VideoResponse>builder()
                 .status(200)
                 .message("Get Video By Id Successfully")
                 .data(response)
+                .build();
+    }
+
+    @Override
+    public ApiResponse<VideoResponse> updateVideoByUser(UUID id, UpdateVideoRequest request) {
+        Video video = videoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Video does not exist"));
+        video.setTitle(request.getTitle());
+        video.setDescription(request.getDescription());
+        video.setYear(request.getYear());
+        video.setDisplayOrder(request.getDisplayOrder());
+        video.setCategory(request.getCategory());
+        Video saved = videoRepository.save(video);
+        VideoResponse response = videoMapper.toVideoResponse(saved);
+        return ApiResponse.<VideoResponse>builder()
+                .status(200)
+                .message("Update Video Successfully")
+                .data(response)
+                .build();
+    }
+    @Override
+    public ApiResponse<Void> deleteVideoByUser(UUID id){
+        Video video = videoRepository.findById(id)
+                .orElseThrow(()-> new BadRequestException("Video does not exist"));
+        videoRepository.delete(video);
+        return ApiResponse.<Void> builder()
+                .status(200)
+                .message("Delete Video Successfully")
                 .build();
     }
 }
