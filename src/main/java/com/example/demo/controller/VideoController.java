@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.request.UpdateVideoRequest;
+import com.example.demo.dto.request.VideoCreateSwaggerRequest;
 import com.example.demo.dto.request.VideoRequest;
 import com.example.demo.dto.response.VideoResponse;
 import com.example.demo.response.ApiResponse;
@@ -7,11 +9,16 @@ import com.example.demo.service.Interface.VideoService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;
 import java.util.UUID;
@@ -39,16 +46,32 @@ public class VideoController {
         );
     }
 
+    @Operation(
+            requestBody = @RequestBody(
+                    required = true,
+                    content = @Content(
+                            mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
+                            schema = @Schema(
+                                    implementation =
+                                            VideoCreateSwaggerRequest.class
+                            )
+                    )
+            )
+    )
     @PostMapping(
             value = "/video",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
-    public ResponseEntity<
-            ApiResponse<VideoResponse>
-            > createVideo(
-            @ModelAttribute VideoRequest request,
+    public ResponseEntity<ApiResponse<VideoResponse>> createVideo(
 
-            @RequestPart("videoFile")
+            @Valid
+            @ModelAttribute
+            VideoRequest request,
+
+            @RequestPart(
+                    value = "videoFile",
+                    required = false
+            )
             MultipartFile videoFile,
 
             @RequestPart(
@@ -68,8 +91,18 @@ public class VideoController {
     }
 
     @GetMapping("/public/video/{id}")
-    public ResponseEntity<ApiResponse<VideoResponse>> getVideoById(@RequestParam UUID id) {
+    public ResponseEntity<ApiResponse<VideoResponse>> getVideoById(@PathVariable UUID id) {
         return ResponseEntity.ok(
                 videoService.getVideoById(id));
+    }
+
+    @PutMapping(value = "/video/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResponse<VideoResponse>> updateVideo(@PathVariable UUID id, @Valid @ModelAttribute UpdateVideoRequest request) {
+        return ResponseEntity.ok(videoService.updateVideoByUser(id, request));
+    }
+
+    @DeleteMapping("/video/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteVideoById(@PathVariable UUID id) {
+        return ResponseEntity.ok(videoService.deleteVideoByUser(id));
     }
 }

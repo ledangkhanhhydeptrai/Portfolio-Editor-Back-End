@@ -2,34 +2,39 @@ package com.example.demo.dto.request;
 
 import com.example.demo.Enum.VideoEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class VideoRequest {
+public class VideoCreateSwaggerRequest {
 
-    @NotBlank
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
     private String title;
 
-    @NotBlank
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
     private String description;
 
-    @NotNull
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
     private VideoEnum category;
 
-    @NotNull
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer year;
 
-    @NotNull
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer displayOrder;
+
+    @Schema(
+            type = "string",
+            format = "binary"
+    )
+    private MultipartFile videoFile;
+
+    @Schema(
+            type = "string",
+            format = "binary"
+    )
+    private MultipartFile thumbnailFile;
 }

@@ -4,6 +4,7 @@ import com.example.demo.Enum.VideoEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 @Getter
@@ -11,25 +12,33 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class VideoRequest {
+public class UpdateVideoRequest {
 
-    @NotBlank
+    @NotBlank(message = "Title is required")
+    @Pattern(
+            regexp = "^(?!\\s*(?i:string)\\s*$).+",
+            message = "Title is invalid"
+    )
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
     private String title;
 
-    @NotBlank
+    @NotBlank(message = "Description is required")
+    @Pattern(
+            regexp = "^(?!\\s*(?i:string)\\s*$).+",
+            message = "Description is invalid"
+    )
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
     private String description;
 
-    @NotNull
+    @NotNull(message = "Category is required")
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
     private VideoEnum category;
 
-    @NotNull
+    @NotNull(message = "Year is required")
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer year;
 
-    @NotNull
+    @NotNull(message = "Display order is required")
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer displayOrder;
 }
