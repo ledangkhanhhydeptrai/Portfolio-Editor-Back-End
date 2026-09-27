@@ -62,6 +62,12 @@ public class User {
             nullable = false
     )
     private LocalDateTime updatedAt;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(
+            name = "role_id",
+            nullable = false
+    )
+    private Role role;
 
     @PrePersist
     protected void onCreate() {
