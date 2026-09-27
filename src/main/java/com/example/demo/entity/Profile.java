@@ -34,4 +34,11 @@ public class Profile {
     private String phone;
     @Column(name = "location")
     private String location;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "user_id",
+            nullable = false,
+            unique = true
+    )
+    private User user;
 }
