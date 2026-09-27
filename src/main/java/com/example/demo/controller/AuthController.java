@@ -1,9 +1,11 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.request.ChangePasswordRequest;
 import com.example.demo.dto.request.LoginRequest;
 import com.example.demo.dto.request.RegisterRequest;
 import com.example.demo.dto.response.LoginResponse;
 import com.example.demo.response.ApiResponse;
+import com.example.demo.service.Interface.ChangePasswordService;
 import com.example.demo.service.Interface.LoginService;
 import com.example.demo.service.Interface.RegisterService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,10 +21,12 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final RegisterService registerService;
     private final LoginService loginService;
+    private final ChangePasswordService changePasswordService;
 
-    public AuthController(RegisterService registerService, LoginService loginService) {
+    public AuthController(RegisterService registerService, LoginService loginService, ChangePasswordService changePasswordService) {
         this.registerService = registerService;
         this.loginService = loginService;
+        this.changePasswordService = changePasswordService;
     }
 
     @PostMapping(
@@ -81,5 +85,16 @@ public class AuthController {
                 .message("Logout thành công")
                 .data(null)
                 .build());
+    }
+
+    @PutMapping("/change-password")
+    public ResponseEntity<ApiResponse<Void>> changePassword(
+            @Valid
+            @RequestBody
+            ChangePasswordRequest request
+    ) {
+        return ResponseEntity.ok(
+                changePasswordService.changePassword(request)
+        );
     }
 }
