@@ -68,6 +68,8 @@ public class User {
             nullable = false
     )
     private Role role;
+    @OneToOne(mappedBy = "user")
+    private Profile profile;
 
     @PrePersist
     protected void onCreate() {
