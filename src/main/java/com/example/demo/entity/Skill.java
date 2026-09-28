@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.example.demo.Enum.SkillEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,8 +19,9 @@ public class Skill {
     private UUID id;
     @Column(name = "name", nullable = false)
     private String name;
+    @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false)
-    private String category;
+    private SkillEnum category;
     @Column(name = "icon_url")
     private String iconUrl;
     @Column(name = "display_order")

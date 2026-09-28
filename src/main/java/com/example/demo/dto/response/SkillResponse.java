@@ -1,5 +1,6 @@
 package com.example.demo.dto.response;
 
+import com.example.demo.Enum.SkillEnum;
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,7 +11,7 @@ import java.util.UUID;
 public class SkillResponse {
     private UUID id;
     private String name;
-    private String category;
+    private SkillEnum category;
     private String iconUrl;
     private Integer displayOrder;
 }

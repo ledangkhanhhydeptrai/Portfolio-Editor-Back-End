@@ -1,24 +1,32 @@
 package com.example.demo.service.Implement;
 
+import com.example.demo.dto.request.CreateSkillRequest;
+import com.example.demo.dto.request.UpdateSkillRequest;
 import com.example.demo.dto.response.SkillResponse;
 import com.example.demo.entity.Skill;
+import com.example.demo.exception.BadRequestException;
 import com.example.demo.mapper.SkillMapper;
 import com.example.demo.repository.SkillRepository;
 import com.example.demo.response.ApiResponse;
+import com.example.demo.service.Interface.CloudinaryService;
 import com.example.demo.service.Interface.SkillService;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class SkillServiceImpl implements SkillService {
     private final SkillRepository skillRepository;
     private final SkillMapper skillMapper;
+    private final CloudinaryService cloudinaryService;
 
-    public SkillServiceImpl(SkillRepository skillRepository, SkillMapper skillMapper) {
+    public SkillServiceImpl(SkillRepository skillRepository, SkillMapper skillMapper, CloudinaryService cloudinaryService) {
         this.skillRepository = skillRepository;
         this.skillMapper = skillMapper;
+        this.cloudinaryService = cloudinaryService;
     }
 
     @Override
@@ -31,6 +39,72 @@ public class SkillServiceImpl implements SkillService {
                 .status(200)
                 .message("Get All Skill Successfully")
                 .data(responses)
+                .build();
+    }
+
+    @Override
+    public ApiResponse<SkillResponse> getSkillById(UUID id) {
+        Skill skill = skillRepository.findById(id)
+                .orElseThrow(() -> new BadRequestException("Skill Not Found"));
+        SkillResponse skillResponse = skillMapper.toSkillResponse(skill);
+        return ApiResponse.<SkillResponse>builder()
+                .status(200)
+                .message("Get Skill Successfully")
+                .data(skillResponse)
+                .build();
+    }
+
+    @Override
+    public ApiResponse<SkillResponse> createSkill(CreateSkillRequest request, MultipartFile iconUrl) {
+        Skill skill = new Skill();
+        skill.setDisplayOrder(request.getDisplayOrder());
+        skill.setName(request.getName());
+        skill.setCategory(request.getCategory());
+        try {
+            String image = cloudinaryService.uploadFile(iconUrl);
+            skill.setIconUrl(image);
+        } catch (Exception e) {
+            throw new BadRequestException(e.getMessage());
+        }
+        Skill savedSkill = skillRepository.save(skill);
+        SkillResponse skillResponse = skillMapper.toSkillResponse(savedSkill);
+        return ApiResponse.<SkillResponse>builder()
+                .status(200)
+                .message("Create Skill Successfully")
+                .data(skillResponse)
+                .build();
+    }
+
+    @Override
+    public ApiResponse<SkillResponse> updateSkill(UpdateSkillRequest request, UUID id, MultipartFile iconUrl) {
+        Skill skill = skillRepository.findById(id)
+                .orElseThrow(() -> new BadRequestException("Skill Not Found"));
+        skill.setDisplayOrder(request.getDisplayOrder());
+        skill.setName(request.getName());
+        skill.setCategory(request.getCategory());
+        try {
+            String image = cloudinaryService.uploadFile(iconUrl);
+            skill.setIconUrl(image);
+        } catch (Exception e) {
+            throw new BadRequestException(e.getMessage());
+        }
+        Skill savedSkill = skillRepository.save(skill);
+        SkillResponse skillResponse = skillMapper.toSkillResponse(savedSkill);
+        return ApiResponse.<SkillResponse>builder()
+                .status(200)
+                .message("Update Skill Successfully")
+                .data(skillResponse)
+                .build();
+    }
+
+    @Override
+    public ApiResponse<Void> deleteSkill(UUID id) {
+        Skill skill = skillRepository.findById(id)
+                .orElseThrow(() -> new BadRequestException("Skill Not Found"));
+        skillRepository.delete(skill);
+        return ApiResponse.<Void>builder()
+                .status(200)
+                .message("Delete Skill Successfully")
                 .build();
     }
 }
