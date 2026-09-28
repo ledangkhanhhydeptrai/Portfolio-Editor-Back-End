@@ -1,9 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.request.ChangePasswordRequest;
-import com.example.demo.dto.request.LoginRequest;
-import com.example.demo.dto.request.RegisterRequest;
+import com.example.demo.dto.request.*;
 import com.example.demo.dto.response.LoginResponse;
+import com.example.demo.dto.response.VerifyOtpResponse;
 import com.example.demo.response.ApiResponse;
 import com.example.demo.service.Interface.ChangePasswordService;
 import com.example.demo.service.Interface.LoginService;
@@ -95,6 +94,29 @@ public class AuthController {
     ) {
         return ResponseEntity.ok(
                 changePasswordService.changePassword(request)
+        );
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<ApiResponse<Void>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        return ResponseEntity.ok(changePasswordService.sendOtp(request));
+    }
+
+    @PostMapping("/verify-otp")
+    public ResponseEntity<ApiResponse<VerifyOtpResponse>> verifyOtp(
+            @Valid @RequestBody VerifyOtpRequest request
+    ) {
+        return ResponseEntity.ok(
+                changePasswordService.verifyOtp(request)
+        );
+    }
+
+    @PutMapping("/reset-password")
+    public ResponseEntity<ApiResponse<Void>> resetPassword(
+            @Valid @RequestBody ResetPasswordRequest request
+    ) {
+        return ResponseEntity.ok(
+                changePasswordService.resetPassword(request)
         );
     }
 }
