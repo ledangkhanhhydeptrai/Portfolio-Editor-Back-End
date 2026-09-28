@@ -23,7 +23,7 @@ public class SkillServiceImpl implements SkillService {
 
     @Override
     public ApiResponse<List<SkillResponse>> getAllSkill() {
-        List<Skill> skills = skillRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
+        List<Skill> skills = skillRepository.findAllByOrderByDisplayOrderAsc();
         List<SkillResponse> responses = skills.stream()
                 .map(skillMapper::toSkillResponse)
                 .toList();

@@ -1,6 +1,7 @@
 package com.example.demo.service.Implement;
 
 import com.example.demo.dto.request.CreateSocialLinkRequest;
+import com.example.demo.dto.request.UpdateSocialLinkRequest;
 import com.example.demo.dto.response.SocialLinkResponse;
 import com.example.demo.entity.SocialLink;
 import com.example.demo.entity.User;
@@ -34,7 +35,7 @@ public class SocialLinkServiceImpl implements SocialLinkService {
 
     @Override
     public ApiResponse<List<SocialLinkResponse>> getAllSocialLink() {
-        List<SocialLink> socialLinks = socialLinkRepository.findAll();
+        List<SocialLink> socialLinks = socialLinkRepository.findAllByOrderByDisplayOrderAsc();
         List<SocialLinkResponse> socialLinkResponses = socialLinks.stream()
                 .map(socialLinkMapper::toSocialLinkResponse)
                 .toList();
@@ -82,6 +83,37 @@ public class SocialLinkServiceImpl implements SocialLinkService {
                 .status(200)
                 .message("Create Social Link Successfully")
                 .data(response)
+                .build();
+    }
+
+    @Override
+    public ApiResponse<SocialLinkResponse> updateSocialLink(UUID id, UpdateSocialLinkRequest request, MultipartFile iconUrl) {
+        SocialLink socialLink = socialLinkRepository.findById(id).orElseThrow(() -> new BadRequestException("Social Link Not Found"));
+        socialLink.setDisplayOrder(request.getDisplayOrder());
+        socialLink.setPlatform(request.getPlatform());
+        socialLink.setUrl(request.getUrl());
+        try {
+            String image = cloudinaryService.uploadFile(iconUrl);
+            socialLink.setIconUrl(image);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        SocialLink savedSocialLink = socialLinkRepository.save(socialLink);
+        SocialLinkResponse response = socialLinkMapper.toSocialLinkResponse(savedSocialLink);
+        return ApiResponse.<SocialLinkResponse>builder()
+                .status(200)
+                .message("Update Social Link Successfully")
+                .data(response)
+                .build();
+    }
+
+    @Override
+    public ApiResponse<Void> deleteSocialLink(UUID id) {
+        SocialLink socialLink = socialLinkRepository.findById(id).orElseThrow(() -> new BadRequestException("Social Link Not Found"));
+        socialLinkRepository.delete(socialLink);
+        return ApiResponse.<Void>builder()
+                .status(200)
+                .message("Delete Social Link Successfully")
                 .build();
     }
 }
