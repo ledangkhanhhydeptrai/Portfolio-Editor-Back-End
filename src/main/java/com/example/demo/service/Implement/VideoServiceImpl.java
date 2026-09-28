@@ -73,186 +73,26 @@ public class VideoServiceImpl
     }
 
     @Override
-    public ApiResponse<VideoResponse>
-    createVideo(
+    public ApiResponse<VideoResponse> createVideo(
             VideoRequest request,
             MultipartFile videoFile,
             MultipartFile thumbnailFile
-
     ) {
 
-
-        System.out.println(
-                "======================================"
-        );
-
-        System.out.println(
-                "DEBUG CREATE VIDEO - START"
-        );
-
-        System.out.println(
-                "======================================"
-        );
-
-        /*
-         * ==========================================
-         * STEP 1 - REQUEST
-         * ==========================================
-         */
-
-        System.out.println(
-                "[STEP 1] Request received"
-        );
-
-        System.out.println(
-                "Title: " +
-                        request.getTitle()
-        );
-
-        System.out.println(
-                "Category: " +
-                        request.getCategory()
-        );
-
-        System.out.println(
-                "Year: " +
-                        request.getYear()
-        );
-
-        System.out.println(
-                "Display order: " +
-                        request.getDisplayOrder()
-        );
-
-        /*
-         * ==========================================
-         * STEP 2 - VIDEO FILE
-         * ==========================================
-         */
-
-        System.out.println(
-                "[STEP 2] Checking video file"
-        );
-
         if (videoFile == null || videoFile.isEmpty()) {
-            throw new BadRequestException("Video file is required");
-        } else {
-
-            System.out.println(
-                    "Video name: " +
-                            videoFile.getOriginalFilename()
-            );
-
-            System.out.println(
-                    "Video content type: " +
-                            videoFile.getContentType()
-            );
-
-            System.out.println(
-                    "Video size: " +
-                            videoFile.getSize() +
-                            " bytes"
-            );
-
-            System.out.println(
-                    "Video size MB: " +
-                            (
-                                    videoFile.getSize() /
-                                            1024.0 /
-                                            1024.0
-                            )
-            );
-
-            System.out.println(
-                    "Video empty: " +
-                            videoFile.isEmpty()
+            throw new BadRequestException(
+                    "Video file is required"
             );
         }
-
-        /*
-         * ==========================================
-         * STEP 3 - THUMBNAIL
-         * ==========================================
-         */
-
-        System.out.println(
-                "[STEP 3] Checking thumbnail"
-        );
 
         if (thumbnailFile == null || thumbnailFile.isEmpty()) {
-
-            throw new BadRequestException("Thumbnail file is required");
-
-        } else {
-
-            System.out.println(
-                    "Thumbnail name: " +
-                            thumbnailFile
-                                    .getOriginalFilename()
-            );
-
-            System.out.println(
-                    "Thumbnail size MB: " +
-                            (
-                                    thumbnailFile.getSize() /
-                                            1024.0 /
-                                            1024.0
-                            )
+            throw new BadRequestException(
+                    "Thumbnail file is required"
             );
         }
 
-        /*
-         * ==========================================
-         * STEP 4 - CURRENT USER
-         * ==========================================
-         */
-
-        System.out.println(
-                "[STEP 4] Getting current user..."
-        );
-
-        User user;
-
-        try {
-
-            user =
-                    authService
-                            .getCurrentUser();
-
-            System.out.println(
-                    "[STEP 4 SUCCESS]"
-            );
-
-            System.out.println(
-                    "User ID: " +
-                            user.getId()
-            );
-
-            System.out.println(
-                    "User email: " +
-                            user.getEmail()
-            );
-
-        } catch (Exception e) {
-
-            System.err.println(
-                    "[STEP 4 FAILED] GET CURRENT USER"
-            );
-
-            e.printStackTrace();
-
-            throw e;
-        }
-
-        /*
-         * ==========================================
-         * STEP 5 - CREATE ENTITY
-         * ==========================================
-         */
-
-        System.out.println(
-                "[STEP 5] Creating Video entity..."
-        );
+        User user =
+                authService.getCurrentUser();
 
         Video video =
                 new Video();
@@ -281,101 +121,24 @@ public class VideoServiceImpl
                 user
         );
 
-        System.out.println(
-                "[STEP 5 SUCCESS]"
-        );
-
-        /*
-         * ==========================================
-         * STEP 6 - CLOUDINARY VIDEO
-         * ==========================================
-         */
-
         try {
 
-            if (
-                    videoFile != null &&
-                            !videoFile.isEmpty()
-            ) {
+            CloudinaryVideoResponse upload =
+                    cloudinaryService.uploadVideo(
+                            videoFile
+                    );
 
-                System.out.println(
-                        "[STEP 6] Uploading VIDEO to Cloudinary..."
-                );
+            video.setVideoUrl(
+                    upload.getUrl()
+            );
 
-                long startTime =
-                        System.currentTimeMillis();
-
-                CloudinaryVideoResponse upload =
-                        cloudinaryService
-                                .uploadVideo(
-                                        videoFile
-                                );
-
-                long endTime =
-                        System.currentTimeMillis();
-
-                System.out.println(
-                        "[STEP 6 SUCCESS]"
-                );
-
-                System.out.println(
-                        "Upload time: " +
-                                (endTime - startTime) +
-                                " ms"
-                );
-
-                System.out.println(
-                        "Cloudinary video URL: " +
-                                upload.getUrl()
-                );
-
-                System.out.println(
-                        "Cloudinary duration: " +
-                                upload.getDuration()
-                );
-
-                video.setVideoUrl(
-                        upload.getUrl()
-                );
-
-                video.setDuration(
-                        formatDuration(
-                                upload.getDuration()
-                        )
-                );
-
-            } else {
-
-                System.out.println(
-                        "[STEP 6 SKIPPED] Video file empty"
-                );
-            }
+            video.setDuration(
+                    formatDuration(
+                            upload.getDuration()
+                    )
+            );
 
         } catch (Exception e) {
-
-            System.err.println(
-                    "======================================"
-            );
-
-            System.err.println(
-                    "[STEP 6 FAILED] VIDEO UPLOAD"
-            );
-
-            System.err.println(
-                    "Exception: " +
-                            e.getClass().getName()
-            );
-
-            System.err.println(
-                    "Message: " +
-                            e.getMessage()
-            );
-
-            e.printStackTrace();
-
-            System.err.println(
-                    "======================================"
-            );
 
             throw new RuntimeException(
                     "Upload Video Error",
@@ -383,66 +146,18 @@ public class VideoServiceImpl
             );
         }
 
-        /*
-         * ==========================================
-         * STEP 7 - CLOUDINARY THUMBNAIL
-         * ==========================================
-         */
-
         try {
 
-            if (
-                    thumbnailFile != null &&
-                            !thumbnailFile.isEmpty()
-            ) {
+            String thumbnailUrl =
+                    cloudinaryService.uploadFile(
+                            thumbnailFile
+                    );
 
-                System.out.println(
-                        "[STEP 7] Uploading THUMBNAIL..."
-                );
-
-                String thumbnailUrl =
-                        cloudinaryService
-                                .uploadFile(
-                                        thumbnailFile
-                                );
-
-                video.setThumbnailUrl(
-                        thumbnailUrl
-                );
-
-                System.out.println(
-                        "[STEP 7 SUCCESS]"
-                );
-
-                System.out.println(
-                        "Thumbnail URL: " +
-                                thumbnailUrl
-                );
-
-            } else {
-
-                System.out.println(
-                        "[STEP 7 SKIPPED] No thumbnail"
-                );
-            }
+            video.setThumbnailUrl(
+                    thumbnailUrl
+            );
 
         } catch (Exception e) {
-
-            System.err.println(
-                    "[STEP 7 FAILED] THUMBNAIL UPLOAD"
-            );
-
-            System.err.println(
-                    "Exception: " +
-                            e.getClass().getName()
-            );
-
-            System.err.println(
-                    "Message: " +
-                            e.getMessage()
-            );
-
-            e.printStackTrace();
 
             throw new RuntimeException(
                     "Upload Thumbnail Error",
@@ -450,81 +165,15 @@ public class VideoServiceImpl
             );
         }
 
-        /*
-         * ==========================================
-         * STEP 8 - DATABASE
-         * ==========================================
-         */
-
-        System.out.println(
-                "[STEP 8] Saving video to database..."
-        );
-
-        Video saved;
-
-        try {
-
-            saved =
-                    videoRepository
-                            .save(video);
-
-            System.out.println(
-                    "[STEP 8 SUCCESS]"
-            );
-
-            System.out.println(
-                    "Video ID: " +
-                            saved.getId()
-            );
-
-        } catch (Exception e) {
-
-            System.err.println(
-                    "[STEP 8 FAILED] DATABASE"
-            );
-
-            System.err.println(
-                    "Exception: " +
-                            e.getClass().getName()
-            );
-
-            System.err.println(
-                    "Message: " +
-                            e.getMessage()
-            );
-
-            e.printStackTrace();
-
-            throw e;
-        }
-
-        /*
-         * ==========================================
-         * STEP 9 - RESPONSE
-         * ==========================================
-         */
-
-        System.out.println(
-                "[STEP 9] Mapping response..."
-        );
+        Video saved =
+                videoRepository.save(
+                        video
+                );
 
         VideoResponse response =
-                videoMapper
-                        .toVideoResponse(
-                                saved
-                        );
-
-        System.out.println(
-                "======================================"
-        );
-
-        System.out.println(
-                "DEBUG CREATE VIDEO - SUCCESS"
-        );
-
-        System.out.println(
-                "======================================"
-        );
+                videoMapper.toVideoResponse(
+                        saved
+                );
 
         return ApiResponse
                 .<VideoResponse>builder()
@@ -535,6 +184,7 @@ public class VideoServiceImpl
                 .data(response)
                 .build();
     }
+
 
     private String formatDuration(
             Double duration
@@ -591,12 +241,13 @@ public class VideoServiceImpl
                 .data(response)
                 .build();
     }
+
     @Override
-    public ApiResponse<Void> deleteVideoByUser(UUID id){
+    public ApiResponse<Void> deleteVideoByUser(UUID id) {
         Video video = videoRepository.findById(id)
-                .orElseThrow(()-> new BadRequestException("Video does not exist"));
+                .orElseThrow(() -> new BadRequestException("Video does not exist"));
         videoRepository.delete(video);
-        return ApiResponse.<Void> builder()
+        return ApiResponse.<Void>builder()
                 .status(200)
                 .message("Delete Video Successfully")
                 .build();

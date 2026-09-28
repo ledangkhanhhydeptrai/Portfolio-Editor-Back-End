@@ -70,7 +70,8 @@ public class User {
     private Role role;
     @OneToOne(mappedBy = "user")
     private Profile profile;
-
+    @OneToMany(mappedBy = "user")
+    private List<SocialLink> socialLinks;
     @PrePersist
     protected void onCreate() {
         LocalDateTime now =
