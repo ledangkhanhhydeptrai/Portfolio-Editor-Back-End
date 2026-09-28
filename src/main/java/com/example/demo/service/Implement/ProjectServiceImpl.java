@@ -22,7 +22,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ApiResponse<List<ProjectResponse>> getAllProject() {
-        List<Project> projects = projectRepository.findAll();
+        List<Project> projects = projectRepository.findAllByOrderByDisplayOrderAsc();
         List<ProjectResponse> response = projects.stream().map(projectMapper::toProjectResponse).toList();
         return ApiResponse.<List<ProjectResponse>>builder()
                 .status(200)

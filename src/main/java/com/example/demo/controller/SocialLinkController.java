@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.request.CreateSocialLinkRequest;
+import com.example.demo.dto.request.UpdateSocialLinkRequest;
 import com.example.demo.dto.response.SocialLinkResponse;
 import com.example.demo.response.ApiResponse;
 import com.example.demo.service.Interface.SocialLinkService;
@@ -45,5 +46,18 @@ public class SocialLinkController {
     )
     MultipartFile iconUrl) {
         return ResponseEntity.ok(socialLinkService.createSocialLink(request, iconUrl));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PutMapping(value = "/update-social-link/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResponse<SocialLinkResponse>> updateSocialLink(@Valid @ModelAttribute UpdateSocialLinkRequest request, @PathVariable UUID id, @RequestPart(value = "iconUrl",
+            required = false) MultipartFile iconUrl) {
+        return ResponseEntity.ok(socialLinkService.updateSocialLink(id, request, iconUrl));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @DeleteMapping("/delete-social-link/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteSocialLink(@PathVariable UUID id) {
+        return ResponseEntity.ok(socialLinkService.deleteSocialLink(id));
     }
 }
