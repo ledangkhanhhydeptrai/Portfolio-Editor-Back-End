@@ -1,13 +1,18 @@
 package com.example.demo.service.Implement;
 
+import com.example.demo.dto.request.CreateProjectRequest;
 import com.example.demo.dto.response.ProjectResponse;
 import com.example.demo.entity.Project;
+import com.example.demo.entity.User;
 import com.example.demo.exception.BadRequestException;
 import com.example.demo.mapper.ProjectMapper;
 import com.example.demo.repository.ProjectRepository;
 import com.example.demo.response.ApiResponse;
+import com.example.demo.service.Interface.AuthService;
+import com.example.demo.service.Interface.CloudinaryService;
 import com.example.demo.service.Interface.ProjectService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,10 +21,14 @@ import java.util.UUID;
 public class ProjectServiceImpl implements ProjectService {
     private final ProjectRepository projectRepository;
     private final ProjectMapper projectMapper;
+    private final CloudinaryService cloudinaryService;
+    private final AuthService authService;
 
-    public ProjectServiceImpl(ProjectRepository projectRepository, ProjectMapper projectMapper) {
+    public ProjectServiceImpl(ProjectRepository projectRepository, ProjectMapper projectMapper, CloudinaryService cloudinaryService, AuthService authService) {
         this.projectRepository = projectRepository;
         this.projectMapper = projectMapper;
+        this.cloudinaryService = cloudinaryService;
+        this.authService = authService;
     }
 
     @Override
@@ -42,6 +51,68 @@ public class ProjectServiceImpl implements ProjectService {
                 .status(200)
                 .message("Get Project By Id Successfully")
                 .data(projectResponse)
+                .build();
+    }
+
+    @Override
+    public ApiResponse<ProjectResponse> createProject(CreateProjectRequest request, MultipartFile thumbnailUrl) {
+        User user = authService.getCurrentUser();
+        Project project = new Project();
+        project.setDisplayOrder(request.getDisplayOrder());
+        project.setDescription(request.getDescription());
+        project.setDemoUrl(request.getDemoUrl());
+        project.setCategory(request.getCategory());
+        project.setGithubUrl(request.getGithubUrl());
+        project.setTitle(request.getTitle());
+        project.setFeatured(request.getFeatured());
+        project.setUser(user);
+        try {
+            String image = cloudinaryService.uploadFile(thumbnailUrl);
+            project.setThumbnailUrl(image);
+        } catch (Exception e) {
+            throw new BadRequestException("Image Upload Failed");
+        }
+        Project projectCreated = projectRepository.save(project);
+        ProjectResponse projectResponse = projectMapper.toProjectResponse(projectCreated);
+        return ApiResponse.<ProjectResponse>builder()
+                .status(200)
+                .message("Create Project Successfully")
+                .data(projectResponse)
+                .build();
+    }
+
+    @Override
+    public ApiResponse<ProjectResponse> updateProject(UUID id, CreateProjectRequest request, MultipartFile thumbnailUrl) {
+        Project project = projectRepository.findById(id).orElseThrow(() -> new BadRequestException("Project Not Found"));
+        project.setDisplayOrder(request.getDisplayOrder());
+        project.setDescription(request.getDescription());
+        project.setDemoUrl(request.getDemoUrl());
+        project.setCategory(request.getCategory());
+        project.setGithubUrl(request.getGithubUrl());
+        project.setTitle(request.getTitle());
+        project.setFeatured(request.getFeatured());
+        try {
+            String image = cloudinaryService.uploadFile(thumbnailUrl);
+            project.setThumbnailUrl(image);
+        } catch (Exception e) {
+            throw new BadRequestException("Image Upload Failed");
+        }
+        Project projectUpdated = projectRepository.save(project);
+        ProjectResponse projectResponse = projectMapper.toProjectResponse(projectUpdated);
+        return ApiResponse.<ProjectResponse>builder()
+                .status(200)
+                .message("Update Project Successfully")
+                .data(projectResponse)
+                .build();
+    }
+
+    @Override
+    public ApiResponse<Void> deleteProject(UUID id) {
+        Project project = projectRepository.findById(id).orElseThrow(() -> new BadRequestException("Project Not Found"));
+        projectRepository.delete(project);
+        return ApiResponse.<Void>builder()
+                .status(200)
+                .message("Delete Project Successfully")
                 .build();
     }
 }

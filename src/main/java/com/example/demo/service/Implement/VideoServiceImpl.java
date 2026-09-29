@@ -96,7 +96,10 @@ public class VideoServiceImpl
 
         Video video =
                 new Video();
-
+        if (videoRepository.existsByUserAndTitleIgnoreCase(user, request.getTitle().trim())) {
+            throw new BadRequestException(
+                    "Video already exists");
+        }
         video.setCategory(
                 request.getCategory()
         );

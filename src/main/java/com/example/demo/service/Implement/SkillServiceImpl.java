@@ -4,10 +4,12 @@ import com.example.demo.dto.request.CreateSkillRequest;
 import com.example.demo.dto.request.UpdateSkillRequest;
 import com.example.demo.dto.response.SkillResponse;
 import com.example.demo.entity.Skill;
+import com.example.demo.entity.User;
 import com.example.demo.exception.BadRequestException;
 import com.example.demo.mapper.SkillMapper;
 import com.example.demo.repository.SkillRepository;
 import com.example.demo.response.ApiResponse;
+import com.example.demo.service.Interface.AuthService;
 import com.example.demo.service.Interface.CloudinaryService;
 import com.example.demo.service.Interface.SkillService;
 import org.springframework.data.domain.Sort;
@@ -22,11 +24,13 @@ public class SkillServiceImpl implements SkillService {
     private final SkillRepository skillRepository;
     private final SkillMapper skillMapper;
     private final CloudinaryService cloudinaryService;
+    private final AuthService authService;
 
-    public SkillServiceImpl(SkillRepository skillRepository, SkillMapper skillMapper, CloudinaryService cloudinaryService) {
+    public SkillServiceImpl(SkillRepository skillRepository, SkillMapper skillMapper, CloudinaryService cloudinaryService, AuthService authService) {
         this.skillRepository = skillRepository;
         this.skillMapper = skillMapper;
         this.cloudinaryService = cloudinaryService;
+        this.authService = authService;
     }
 
     @Override
@@ -56,10 +60,15 @@ public class SkillServiceImpl implements SkillService {
 
     @Override
     public ApiResponse<SkillResponse> createSkill(CreateSkillRequest request, MultipartFile iconUrl) {
+        User user = authService.getCurrentUser();
         Skill skill = new Skill();
+        if (skillRepository.existsByUserAndNameIgnoreCase(user, request.getName().trim())) {
+            throw new BadRequestException("Skill Already Exists");
+        }
         skill.setDisplayOrder(request.getDisplayOrder());
         skill.setName(request.getName());
         skill.setCategory(request.getCategory());
+        skill.setUser(user);
         try {
             String image = cloudinaryService.uploadFile(iconUrl);
             skill.setIconUrl(image);
