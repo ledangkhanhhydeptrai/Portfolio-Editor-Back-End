@@ -74,7 +74,10 @@ public class EducationServiceImpl implements EducationService {
 
     @Override
     public ApiResponse<EducationResponse> updateEducation(UUID id, CreateEducationRequest request) {
-        Education education = educationRepository.findById(id).orElseThrow(() -> new BadRequestException("Education Not Found"));
+        Education education = educationRepository.findById(id)
+                .orElseThrow(() -> new BadRequestException("Education Not Found"));
+        User user =  authService.getCurrentUser();
+        education.setUser(user);
         education.setDegree(request.getDegree());
         education.setDescription(request.getDescription());
         education.setDisplayOrder(request.getDisplayOrder());

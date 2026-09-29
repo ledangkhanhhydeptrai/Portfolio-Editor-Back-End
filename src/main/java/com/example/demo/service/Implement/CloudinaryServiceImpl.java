@@ -195,4 +195,50 @@ public class CloudinaryServiceImpl
                 fileName.lastIndexOf(".")
         );
     }
+
+    @Override
+    public String uploadCV(
+            MultipartFile file
+    ) throws IOException {
+
+        validateFile(file);
+
+        if (!"application/pdf".equalsIgnoreCase(
+                file.getContentType()
+        )) {
+            throw new IllegalArgumentException(
+                    "CV phải là file PDF"
+            );
+        }
+
+        Map<?, ?> uploadResult =
+                cloudinary
+                        .uploader()
+                        .upload(
+                                file.getBytes(),
+                                ObjectUtils.asMap(
+                                        "folder",
+                                        "portfolio/cv",
+
+                                        "resource_type",
+                                        "image",
+
+                                        "format",
+                                        "pdf"
+                                )
+                        );
+
+        Object secureUrl =
+                uploadResult.get(
+                        "secure_url"
+                );
+
+        if (secureUrl == null) {
+            throw new IOException(
+                    "Cloudinary không trả về secure_url"
+            );
+        }
+
+        return secureUrl.toString();
+    }
 }

@@ -229,6 +229,7 @@ public class VideoServiceImpl
 
     @Override
     public ApiResponse<VideoResponse> updateVideoByUser(UUID id, UpdateVideoRequest request) {
+        User user = authService.getCurrentUser();
         Video video = videoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Video does not exist"));
         video.setTitle(request.getTitle());
@@ -236,6 +237,7 @@ public class VideoServiceImpl
         video.setYear(request.getYear());
         video.setDisplayOrder(request.getDisplayOrder());
         video.setCategory(request.getCategory());
+        video.setUser(user);
         Video saved = videoRepository.save(video);
         VideoResponse response = videoMapper.toVideoResponse(saved);
         return ApiResponse.<VideoResponse>builder()
@@ -247,8 +249,10 @@ public class VideoServiceImpl
 
     @Override
     public ApiResponse<Void> deleteVideoByUser(UUID id) {
+        User user = authService.getCurrentUser();
         Video video = videoRepository.findById(id)
                 .orElseThrow(() -> new BadRequestException("Video does not exist"));
+        video.setUser(user);
         videoRepository.delete(video);
         return ApiResponse.<Void>builder()
                 .status(200)
