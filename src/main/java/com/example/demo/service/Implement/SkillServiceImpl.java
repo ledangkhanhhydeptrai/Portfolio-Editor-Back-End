@@ -88,6 +88,8 @@ public class SkillServiceImpl implements SkillService {
     public ApiResponse<SkillResponse> updateSkill(UpdateSkillRequest request, UUID id, MultipartFile iconUrl) {
         Skill skill = skillRepository.findById(id)
                 .orElseThrow(() -> new BadRequestException("Skill Not Found"));
+        User user = authService.getCurrentUser();
+        skill.setUser(user);
         skill.setDisplayOrder(request.getDisplayOrder());
         skill.setName(request.getName());
         skill.setCategory(request.getCategory());

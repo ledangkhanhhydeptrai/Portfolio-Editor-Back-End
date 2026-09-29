@@ -14,4 +14,8 @@ public interface CloudinaryService {
     CloudinaryVideoResponse uploadVideo(
             MultipartFile file
     ) throws IOException;
+
+    String uploadCV(
+            MultipartFile file
+    ) throws IOException;
 }

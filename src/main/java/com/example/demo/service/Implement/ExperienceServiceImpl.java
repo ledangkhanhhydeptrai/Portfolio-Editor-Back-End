@@ -103,7 +103,10 @@ public class ExperienceServiceImpl implements ExperienceService {
 
     @Override
     public ApiResponse<ExperienceResponse> updateExperience(UUID id, CreateExperienceRequest request) {
-        Experience experience = experienceRepository.findById(id).orElseThrow(() -> new BadRequestException("Experience Not Found"));
+        Experience experience = experienceRepository.findById(id)
+                .orElseThrow(() -> new BadRequestException("Experience Not Found"));
+        User user =  authService.getCurrentUser();
+        experience.setUser(user);
         experience.setPosition(request.getPosition());
         experience.setCompanyName(request.getCompanyName());
         experience.setDescription(request.getDescription());

@@ -83,7 +83,10 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ApiResponse<ProjectResponse> updateProject(UUID id, CreateProjectRequest request, MultipartFile thumbnailUrl) {
-        Project project = projectRepository.findById(id).orElseThrow(() -> new BadRequestException("Project Not Found"));
+        Project project = projectRepository.findById(id)
+                .orElseThrow(() -> new BadRequestException("Project Not Found"));
+        User user = authService.getCurrentUser();
+        project.setUser(user);
         project.setDisplayOrder(request.getDisplayOrder());
         project.setDescription(request.getDescription());
         project.setDemoUrl(request.getDemoUrl());

@@ -88,7 +88,10 @@ public class SocialLinkServiceImpl implements SocialLinkService {
 
     @Override
     public ApiResponse<SocialLinkResponse> updateSocialLink(UUID id, UpdateSocialLinkRequest request, MultipartFile iconUrl) {
-        SocialLink socialLink = socialLinkRepository.findById(id).orElseThrow(() -> new BadRequestException("Social Link Not Found"));
+        SocialLink socialLink = socialLinkRepository.findById(id)
+                .orElseThrow(() -> new BadRequestException("Social Link Not Found"));
+        User user = authService.getCurrentUser();
+        socialLink.setUser(user);
         socialLink.setDisplayOrder(request.getDisplayOrder());
         socialLink.setPlatform(request.getPlatform());
         socialLink.setUrl(request.getUrl());
