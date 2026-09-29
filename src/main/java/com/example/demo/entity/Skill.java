@@ -26,4 +26,7 @@ public class Skill {
     private String iconUrl;
     @Column(name = "display_order")
     private Integer displayOrder;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }

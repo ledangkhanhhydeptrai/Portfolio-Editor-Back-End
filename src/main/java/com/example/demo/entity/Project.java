@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.example.demo.Enum.SkillEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,6 +32,13 @@ public class Project {
     @Column(name = "display_order")
     private Integer displayOrder;
     private Boolean featured;
+    @Enumerated(EnumType.STRING)
     @Column(name = "category")
-    private String category;
+    private SkillEnum category;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "user_id",
+            nullable = false
+    )
+    private User user;
 }

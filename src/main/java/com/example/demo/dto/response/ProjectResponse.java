@@ -1,5 +1,6 @@
 package com.example.demo.dto.response;
 
+import com.example.demo.Enum.SkillEnum;
 import lombok.Builder;
 import lombok.Data;
 
@@ -16,5 +17,5 @@ public class ProjectResponse {
     private String demoUrl;
     private Integer displayOrder;
     private Boolean featured;
-    private String category;
+    private SkillEnum category;
 }

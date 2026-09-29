@@ -30,4 +30,10 @@ public class Education {
     private String description;
     @Column(name = "display_order")
     private Integer displayOrder;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "user_id",
+            nullable = false
+    )
+    private User user;
 }
