@@ -33,9 +33,21 @@ public class SkillController {
         return ResponseEntity.ok(skillService.getAllSkill());
     }
 
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/user/skill")
+    public ResponseEntity<ApiResponse<List<SkillResponse>>> getAllSkillByUser() {
+        return ResponseEntity.ok(skillService.getAllSkillByUser());
+    }
+
     @GetMapping("/public/skill/{id}")
     public ResponseEntity<ApiResponse<SkillResponse>> getSkillById(@PathVariable UUID id) {
         return ResponseEntity.ok(skillService.getSkillById(id));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/user/skill/{id}")
+    public ResponseEntity<ApiResponse<SkillResponse>> getAllSkillByUserId(@PathVariable UUID id) {
+        return ResponseEntity.ok(skillService.getSkillByUserId(id));
     }
 
     @PreAuthorize("hasRole('USER')")

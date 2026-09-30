@@ -31,9 +31,21 @@ public class CVController {
         return ResponseEntity.ok(cvService.getAllCV());
     }
 
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/user/CV")
+    public ResponseEntity<ApiResponse<List<CVResponse>>> getAllCVByUser() {
+        return ResponseEntity.ok(cvService.getAllCVByUser());
+    }
+
     @GetMapping("/public/CV/{id}")
     public ResponseEntity<ApiResponse<CVResponse>> getCVById(@PathVariable UUID id) {
         return ResponseEntity.ok(cvService.getCVById(id));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/user/CV/{id}")
+    public ResponseEntity<ApiResponse<CVResponse>> getCVByUserId(@PathVariable UUID id) {
+        return ResponseEntity.ok(cvService.getCVByUserId(id));
     }
 
     @PreAuthorize("hasRole('USER')")

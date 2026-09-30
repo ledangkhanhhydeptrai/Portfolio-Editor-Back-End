@@ -43,6 +43,18 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public ApiResponse<List<ProjectResponse>> getAllProjectByUser() {
+        User user = authService.getCurrentUser();
+        List<Project> projects = projectRepository.findAllByUserOrderByDisplayOrderAsc(user);
+        List<ProjectResponse> response = projects.stream().map(projectMapper::toProjectResponse).toList();
+        return ApiResponse.<List<ProjectResponse>>builder()
+                .status(200)
+                .message("Get All Project Successfully")
+                .data(response)
+                .build();
+    }
+
+    @Override
     public ApiResponse<ProjectResponse> getProjectById(UUID id) {
         Project project = projectRepository.findById(id)
                 .orElseThrow(() -> new BadRequestException("Project Not Found"));
@@ -50,6 +62,19 @@ public class ProjectServiceImpl implements ProjectService {
         return ApiResponse.<ProjectResponse>builder()
                 .status(200)
                 .message("Get Project By Id Successfully")
+                .data(projectResponse)
+                .build();
+    }
+
+    @Override
+    public ApiResponse<ProjectResponse> getProjectByIdAndUser(UUID id) {
+        User user = authService.getCurrentUser();
+        Project project = projectRepository.findByIdAndUser(id, user)
+                .orElseThrow(() -> new BadRequestException("Project Not Found"));
+        ProjectResponse projectResponse = projectMapper.toProjectResponse(project);
+        return ApiResponse.<ProjectResponse>builder()
+                .status(200)
+                .message("Get Project By Id And User Successfully")
                 .data(projectResponse)
                 .build();
     }

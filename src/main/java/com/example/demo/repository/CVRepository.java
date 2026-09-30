@@ -17,4 +17,6 @@ public interface CVRepository
             UUID id,
             User user
     );
+
+    List<CV> findAllByUserOrderByDisplayOrderAsc(User user);
 }

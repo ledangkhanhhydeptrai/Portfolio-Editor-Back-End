@@ -12,4 +12,8 @@ import java.util.UUID;
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, UUID> {
     List<Project> findAllByOrderByDisplayOrderAsc();
+
+    List<Project> findAllByUserOrderByDisplayOrderAsc(User user);
+
+    Optional<Project> findByIdAndUser(UUID id, User user);
 }

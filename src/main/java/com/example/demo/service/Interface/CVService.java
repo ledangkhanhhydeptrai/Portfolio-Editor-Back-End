@@ -18,4 +18,8 @@ public interface CVService {
     ApiResponse<CVResponse> updateCV(UUID id, CreateCVRequest request);
 
     ApiResponse<Void> deleteCV(UUID id);
+
+    ApiResponse<List<CVResponse>> getAllCVByUser();
+
+    ApiResponse<CVResponse> getCVByUserId(UUID id);
 }

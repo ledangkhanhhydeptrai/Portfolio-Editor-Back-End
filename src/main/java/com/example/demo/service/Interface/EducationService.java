@@ -17,4 +17,8 @@ public interface EducationService {
     ApiResponse<EducationResponse> updateEducation(UUID id, CreateEducationRequest request);
 
     ApiResponse<Void> deleteEducation(UUID id);
+
+    ApiResponse<List<EducationResponse>> getAllEducationByUser();
+
+    ApiResponse<EducationResponse> getAllEducationByUserId(UUID id);
 }

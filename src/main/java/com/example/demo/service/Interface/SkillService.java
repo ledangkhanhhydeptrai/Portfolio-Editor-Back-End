@@ -19,4 +19,8 @@ public interface SkillService {
     ApiResponse<SkillResponse> updateSkill(UpdateSkillRequest request, UUID id, MultipartFile iconUrl);
 
     ApiResponse<Void> deleteSkill(UUID id);
+
+    ApiResponse<List<SkillResponse>> getAllSkillByUser();
+
+    ApiResponse<SkillResponse> getSkillByUserId(UUID id);
 }

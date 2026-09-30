@@ -11,8 +11,16 @@ import java.util.UUID;
 
 public interface ProjectService {
     ApiResponse<List<ProjectResponse>> getAllProject();
+
     ApiResponse<ProjectResponse> getProjectById(UUID id);
+
     ApiResponse<ProjectResponse> createProject(CreateProjectRequest request, MultipartFile thumbnailUrl);
+
     ApiResponse<ProjectResponse> updateProject(UUID id, CreateProjectRequest request, MultipartFile thumbnailUrl);
+
     ApiResponse<Void> deleteProject(UUID id);
+
+    ApiResponse<List<ProjectResponse>> getAllProjectByUser();
+
+    ApiResponse<ProjectResponse> getProjectByIdAndUser(UUID id);
 }

@@ -43,8 +43,33 @@ public class CVServiceImpl implements CVService {
     }
 
     @Override
+    public ApiResponse<List<CVResponse>> getAllCVByUser() {
+        User user = authService.getCurrentUser();
+        List<CV> cv = cvRepository.findAllByUserOrderByDisplayOrderAsc(user);
+        List<CVResponse> response = cv.stream().map(cvMapper::toCVResponse).toList();
+        return ApiResponse.<List<CVResponse>>builder()
+                .status(200)
+                .message("Get All CV Successfully")
+                .data(response)
+                .build();
+    }
+
+    @Override
     public ApiResponse<CVResponse> getCVById(UUID id) {
         CV cv = cvRepository.findById(id).orElseThrow(() -> new BadRequestException("CV not found"));
+        CVResponse response = cvMapper.toCVResponse(cv);
+        return ApiResponse.<CVResponse>builder()
+                .status(200)
+                .message("Get CV Successfully")
+                .data(response)
+                .build();
+    }
+
+    @Override
+    public ApiResponse<CVResponse> getCVByUserId(UUID id) {
+        User user = authService.getCurrentUser();
+        CV cv = cvRepository.findByIdAndUser(id, user)
+                .orElseThrow(() -> new BadRequestException("CV not found"));
         CVResponse response = cvMapper.toCVResponse(cv);
         return ApiResponse.<CVResponse>builder()
                 .status(200)
