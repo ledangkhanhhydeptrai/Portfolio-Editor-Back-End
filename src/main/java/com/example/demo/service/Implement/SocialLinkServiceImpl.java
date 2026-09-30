@@ -47,6 +47,33 @@ public class SocialLinkServiceImpl implements SocialLinkService {
     }
 
     @Override
+    public ApiResponse<List<SocialLinkResponse>> getAllSocialLinkByUser() {
+        User user = authService.getCurrentUser();
+        List<SocialLink> socialLinks = socialLinkRepository.findAllByUserOrderByDisplayOrderAsc(user);
+        List<SocialLinkResponse> socialLinkResponses = socialLinks.stream()
+                .map(socialLinkMapper::toSocialLinkResponse)
+                .toList();
+        return ApiResponse.<List<SocialLinkResponse>>builder()
+                .status(200)
+                .message("Get All Social Link Successfully")
+                .data(socialLinkResponses)
+                .build();
+    }
+
+    @Override
+    public ApiResponse<SocialLinkResponse> getSocialLinkByUser(UUID id) {
+        User user = authService.getCurrentUser();
+        SocialLink socialLinks = socialLinkRepository.findByIdAndUser(id, user)
+                .orElseThrow(() -> new BadRequestException("Social Link User By Id not found"));
+        SocialLinkResponse socialLinkResponses = socialLinkMapper.toSocialLinkResponse(socialLinks);
+        return ApiResponse.<SocialLinkResponse>builder()
+                .status(200)
+                .message("Get Social Link Successfully")
+                .data(socialLinkResponses)
+                .build();
+    }
+
+    @Override
     public ApiResponse<SocialLinkResponse> getSocialLinkById(UUID id) {
         SocialLink socialLink = socialLinkRepository.findById(id).orElseThrow(() -> new BadRequestException("Social Link Not Found"));
         SocialLinkResponse response = socialLinkMapper.toSocialLinkResponse(socialLink);

@@ -29,9 +29,21 @@ public class EducationController {
         return ResponseEntity.ok(educationService.getAllEducation());
     }
 
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/user/education")
+    public ResponseEntity<ApiResponse<List<EducationResponse>>> getAllEducationByUser() {
+        return ResponseEntity.ok(educationService.getAllEducationByUser());
+    }
+
     @GetMapping("/public/education/{id}")
     public ResponseEntity<ApiResponse<EducationResponse>> getEducationById(@PathVariable UUID id) {
         return ResponseEntity.ok(educationService.getEducationById(id));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/user/education/{id}")
+    public ResponseEntity<ApiResponse<EducationResponse>> getAllEducationByUserId(UUID id) {
+        return ResponseEntity.ok(educationService.getAllEducationByUserId(id));
     }
 
     @PreAuthorize("hasRole('USER')")

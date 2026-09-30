@@ -17,4 +17,8 @@ public interface ExperienceService {
     ApiResponse<ExperienceResponse> updateExperience(UUID id, CreateExperienceRequest request);
 
     ApiResponse<Void> deleteExperience(UUID id);
+
+    ApiResponse<List<ExperienceResponse>> getAllExperienceByUser();
+
+    ApiResponse<ExperienceResponse> getAllExperienceByUserId(UUID id);
 }

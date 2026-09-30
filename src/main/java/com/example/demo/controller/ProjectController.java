@@ -30,9 +30,21 @@ public class ProjectController {
         return ResponseEntity.ok(projectService.getAllProject());
     }
 
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/user/project")
+    public ResponseEntity<ApiResponse<List<ProjectResponse>>> getAllProjectByUser() {
+        return ResponseEntity.ok(projectService.getAllProjectByUser());
+    }
+
     @GetMapping("/public/projects/{id}")
     public ResponseEntity<ApiResponse<ProjectResponse>> getProjectById(@PathVariable UUID id) {
         return ResponseEntity.ok(projectService.getProjectById(id));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/user/project/{id}")
+    public ResponseEntity<ApiResponse<ProjectResponse>> getProjectByIdAndUser(@PathVariable UUID id) {
+        return ResponseEntity.ok(projectService.getProjectByIdAndUser(id));
     }
 
     @PreAuthorize("hasRole('USER')")

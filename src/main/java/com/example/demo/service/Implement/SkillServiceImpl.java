@@ -47,8 +47,37 @@ public class SkillServiceImpl implements SkillService {
     }
 
     @Override
+    public ApiResponse<List<SkillResponse>> getAllSkillByUser() {
+        User user = authService.getCurrentUser();
+        System.out.println("CURRENT USER ID: " + user.getId());
+        System.out.println("CURRENT USER EMAIL: " + user.getEmail());
+        List<Skill> skills = skillRepository.findAllByUserOrderByDisplayOrderAsc(user);
+        List<SkillResponse> responses = skills.stream()
+                .map(skillMapper::toSkillResponse)
+                .toList();
+        return ApiResponse.<List<SkillResponse>>builder()
+                .status(200)
+                .message("Get All Skill By User Successfully")
+                .data(responses)
+                .build();
+    }
+
+    @Override
     public ApiResponse<SkillResponse> getSkillById(UUID id) {
         Skill skill = skillRepository.findById(id)
+                .orElseThrow(() -> new BadRequestException("Skill Not Found"));
+        SkillResponse skillResponse = skillMapper.toSkillResponse(skill);
+        return ApiResponse.<SkillResponse>builder()
+                .status(200)
+                .message("Get Skill Successfully")
+                .data(skillResponse)
+                .build();
+    }
+
+    @Override
+    public ApiResponse<SkillResponse> getSkillByUserId(UUID id) {
+        User user = authService.getCurrentUser();
+        Skill skill = skillRepository.findByIdAndUser(id, user)
                 .orElseThrow(() -> new BadRequestException("Skill Not Found"));
         SkillResponse skillResponse = skillMapper.toSkillResponse(skill);
         return ApiResponse.<SkillResponse>builder()

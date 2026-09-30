@@ -30,9 +30,21 @@ public class ExperienceController {
         return ResponseEntity.ok(experienceService.getAllExperience());
     }
 
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/user/experience")
+    public ResponseEntity<ApiResponse<List<ExperienceResponse>>> getAllExperienceByUser() {
+        return ResponseEntity.ok(experienceService.getAllExperienceByUser());
+    }
+
     @GetMapping("/public/experience/{id}")
     public ResponseEntity<ApiResponse<ExperienceResponse>> getExperienceById(@PathVariable UUID id) {
         return ResponseEntity.ok(experienceService.getExperienceById(id));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/user/experience/{id}")
+    public ResponseEntity<ApiResponse<ExperienceResponse>> getAllExperienceByUserId(UUID id) {
+        return ResponseEntity.ok(experienceService.getAllExperienceByUserId(id));
     }
 
     @PreAuthorize("hasRole('USER')")

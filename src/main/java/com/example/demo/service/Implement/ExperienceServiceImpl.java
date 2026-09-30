@@ -41,6 +41,32 @@ public class ExperienceServiceImpl implements ExperienceService {
     }
 
     @Override
+    public ApiResponse<List<ExperienceResponse>> getAllExperienceByUser() {
+        User user = authService.getCurrentUser();
+        List<Experience> experiences = experienceRepository.findAllByOrderByDisplayOrderAsc(user);
+        List<ExperienceResponse> responses = experiences.stream()
+                .map(experienceMapper::toResponse)
+                .toList();
+        return ApiResponse.<List<ExperienceResponse>>builder()
+                .status(200)
+                .message("Get All Experience Successfully")
+                .data(responses)
+                .build();
+    }
+
+    @Override
+    public ApiResponse<ExperienceResponse> getAllExperienceByUserId(UUID id) {
+        User user = authService.getCurrentUser();
+        Experience experiences = experienceRepository.findByIdAndUser(id, user).orElseThrow(() -> new BadRequestException("Experience Not Found"));
+        ExperienceResponse responses = experienceMapper.toResponse(experiences);
+        return ApiResponse.<ExperienceResponse>builder()
+                .status(200)
+                .message("Get All Experience Successfully")
+                .data(responses)
+                .build();
+    }
+
+    @Override
     public ApiResponse<ExperienceResponse> getExperienceById(UUID id) {
         Experience experience = experienceRepository.findById(id).orElseThrow(() -> new BadRequestException("Experience Not Found"));
         ExperienceResponse responses = experienceMapper.toResponse(experience);
@@ -105,7 +131,7 @@ public class ExperienceServiceImpl implements ExperienceService {
     public ApiResponse<ExperienceResponse> updateExperience(UUID id, CreateExperienceRequest request) {
         Experience experience = experienceRepository.findById(id)
                 .orElseThrow(() -> new BadRequestException("Experience Not Found"));
-        User user =  authService.getCurrentUser();
+        User user = authService.getCurrentUser();
         experience.setUser(user);
         experience.setPosition(request.getPosition());
         experience.setCompanyName(request.getCompanyName());

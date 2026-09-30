@@ -33,6 +33,18 @@ public class SocialLinkController {
         return ResponseEntity.ok(socialLinkService.getAllSocialLink());
     }
 
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/user/social-link")
+    public ResponseEntity<ApiResponse<List<SocialLinkResponse>>> getAllSocialLinkByUser() {
+        return ResponseEntity.ok(socialLinkService.getAllSocialLinkByUser());
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/user/social-link/{id}")
+    public ResponseEntity<ApiResponse<SocialLinkResponse>> getSocialLinkByUser(UUID id) {
+        return ResponseEntity.ok(socialLinkService.getSocialLinkByUser(id));
+    }
+
     @GetMapping("/public/social_link/{id}")
     public ResponseEntity<ApiResponse<SocialLinkResponse>> getSocialLinkById(@PathVariable UUID id) {
         return ResponseEntity.ok(socialLinkService.getSocialLinkById(id));
