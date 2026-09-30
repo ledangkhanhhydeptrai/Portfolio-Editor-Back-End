@@ -17,7 +17,9 @@ import com.example.demo.service.Interface.VideoService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -257,6 +259,32 @@ public class VideoServiceImpl
         return ApiResponse.<Void>builder()
                 .status(200)
                 .message("Delete Video Successfully")
+                .build();
+    }
+
+    @Override
+    public ApiResponse<List<VideoResponse>> getVideoByOnlyUser() {
+        User user = authService.getCurrentUser();
+        List<Video> videos = videoRepository.findAllByUserOrderByDisplayOrderAsc(user);
+        List<VideoResponse> response = videos.stream()
+                .map(videoMapper::toVideoResponse).toList();
+        return ApiResponse.<List<VideoResponse>>builder()
+                .status(200)
+                .message("Get All Video By User Login Successfully")
+                .data(response)
+                .build();
+    }
+
+    @Override
+    public ApiResponse<VideoResponse> getVideoByIdOnlyUser(UUID id) {
+        User user = authService.getCurrentUser();
+        Video videos = videoRepository.findByIdAndUser(id, user)
+                .orElseThrow(() -> new BadRequestException("Video User By Id not found"));
+        VideoResponse response = videoMapper.toVideoResponse(videos);
+        return ApiResponse.<VideoResponse>builder()
+                .status(200)
+                .message("Get All Video By User Login Successfully")
+                .data(response)
                 .build();
     }
 }

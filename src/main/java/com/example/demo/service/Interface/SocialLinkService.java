@@ -19,4 +19,8 @@ public interface SocialLinkService {
     ApiResponse<SocialLinkResponse> updateSocialLink(UUID id, UpdateSocialLinkRequest request, MultipartFile iconUrl);
 
     ApiResponse<Void> deleteSocialLink(UUID id);
+
+    ApiResponse<List<SocialLinkResponse>> getAllSocialLinkByUser();
+
+    ApiResponse<SocialLinkResponse> getSocialLinkByUser(UUID id);
 }

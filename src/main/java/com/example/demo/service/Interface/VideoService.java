@@ -23,5 +23,10 @@ public interface VideoService {
     ApiResponse<VideoResponse> getVideoById(UUID id);
 
     ApiResponse<VideoResponse> updateVideoByUser(UUID id, UpdateVideoRequest request);
+
     ApiResponse<Void> deleteVideoByUser(UUID id);
+
+    ApiResponse<List<VideoResponse>> getVideoByOnlyUser();
+
+    ApiResponse<VideoResponse> getVideoByIdOnlyUser(UUID id);
 }
