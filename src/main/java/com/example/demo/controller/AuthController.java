@@ -14,6 +14,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
+
 @RestController
 @RequestMapping("/api/auth")
 @Tag(name = "Authentication")
@@ -47,43 +49,67 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<LoginResponse>> login(
-            @RequestBody LoginRequest request) {
+            @RequestBody LoginRequest request
+    ) {
+        LoginResponse loginResponse =
+                loginService.login(request);
 
-        // 1. Service chỉ trả JWT + user info
-        LoginResponse loginResponse = loginService.login(request);
+        ResponseCookie accessTokenCookie =
+                ResponseCookie.from(
+                                "access_token",
+                                loginResponse.getToken()
+                        )
+                        .httpOnly(true)
+                        .secure(false)
+                        .sameSite("Lax")
+                        .path("/")
+                        .maxAge(Duration.ofHours(1))
+                        .build();
 
-        // 2. Set JWT vào HttpOnly Cookie
-        ResponseCookie cookie = ResponseCookie.from("access_token", loginResponse.getToken())
-                .httpOnly(true)
-                .secure(false) // true khi deploy HTTPS
-                .sameSite("None")
-                .path("/")
-                .build();
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(ApiResponse.<LoginResponse>builder()
-                        .status(200)
-                        .message("Đăng nhập thành công")
-                        .data(loginResponse)
-                        .build());
+        return ResponseEntity
+                .ok()
+                .header(
+                        HttpHeaders.SET_COOKIE,
+                        accessTokenCookie.toString()
+                )
+                .body(
+                        ApiResponse
+                                .<LoginResponse>builder()
+                                .status(200)
+                                .message("Đăng nhập thành công")
+                                .data(loginResponse)
+                                .build()
+                );
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<ApiResponse<Void>> logout(HttpServletResponse response) {
+    public ResponseEntity<ApiResponse<Void>> logout() {
+        ResponseCookie deleteCookie =
+                ResponseCookie.from(
+                                "access_token",
+                                ""
+                        )
+                        .httpOnly(true)
+                        .secure(false)
+                        .sameSite("Lax")
+                        .path("/")
+                        .maxAge(Duration.ZERO)
+                        .build();
 
-        Cookie cookie = new Cookie("access_token", null);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(0); // xóa cookie
-
-        response.addCookie(cookie);
-
-        return ResponseEntity.ok(ApiResponse.<Void>builder()
-                .status(200)
-                .message("Logout thành công")
-                .data(null)
-                .build());
+        return ResponseEntity
+                .ok()
+                .header(
+                        HttpHeaders.SET_COOKIE,
+                        deleteCookie.toString()
+                )
+                .body(
+                        ApiResponse
+                                .<Void>builder()
+                                .status(200)
+                                .message("Đăng xuất thành công")
+                                .data(null)
+                                .build()
+                );
     }
 
     @PutMapping("/change-password")
