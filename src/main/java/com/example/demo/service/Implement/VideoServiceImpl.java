@@ -154,7 +154,7 @@ public class VideoServiceImpl
         try {
 
             String thumbnailUrl =
-                    cloudinaryService.uploadFile(
+                    cloudinaryService.uploadImage(
                             thumbnailFile
                     );
 
