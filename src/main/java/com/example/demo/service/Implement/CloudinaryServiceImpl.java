@@ -91,6 +91,17 @@ public class CloudinaryServiceImpl
 
         validateFile(file);
 
+        String contentType = file.getContentType();
+
+        if (
+                contentType == null ||
+                        !contentType.startsWith("video/")
+        ) {
+            throw new IllegalArgumentException(
+                    "File phải là video"
+            );
+        }
+
         File tempFile =
                 Files.createTempFile(
                         "portfolio-video-",
@@ -225,6 +236,52 @@ public class CloudinaryServiceImpl
 
                                         "format",
                                         "pdf"
+                                )
+                        );
+
+        Object secureUrl =
+                uploadResult.get(
+                        "secure_url"
+                );
+
+        if (secureUrl == null) {
+            throw new IOException(
+                    "Cloudinary không trả về secure_url"
+            );
+        }
+
+        return secureUrl.toString();
+    }
+
+    @Override
+    public String uploadImage(
+            MultipartFile file
+    ) throws IOException {
+
+        validateFile(file);
+
+        String contentType = file.getContentType();
+
+        if (
+                contentType == null ||
+                        !contentType.startsWith("image/")
+        ) {
+            throw new IllegalArgumentException(
+                    "File phải là hình ảnh"
+            );
+        }
+
+        Map<?, ?> uploadResult =
+                cloudinary
+                        .uploader()
+                        .upload(
+                                file.getBytes(),
+                                ObjectUtils.asMap(
+                                        "folder",
+                                        "portfolio/thumbnails",
+
+                                        "resource_type",
+                                        "image"
                                 )
                         );
 
