@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.request.*;
 import com.example.demo.dto.response.LoginResponse;
+import com.example.demo.dto.response.LoginServiceResult;
+import com.example.demo.dto.response.LoginUserResponse;
 import com.example.demo.dto.response.VerifyOtpResponse;
 import com.example.demo.response.ApiResponse;
 import com.example.demo.service.Interface.ChangePasswordService;
@@ -51,19 +53,26 @@ public class AuthController {
     public ResponseEntity<ApiResponse<LoginResponse>> login(
             @RequestBody LoginRequest request
     ) {
-        LoginResponse loginResponse =
+
+        LoginServiceResult result =
                 loginService.login(request);
 
         ResponseCookie accessTokenCookie =
                 ResponseCookie.from(
                                 "access_token",
-                                loginResponse.getToken()
+                                result.getAccessToken()
                         )
                         .httpOnly(true)
                         .secure(false)
                         .sameSite("Lax")
                         .path("/")
                         .maxAge(Duration.ofHours(1))
+                        .build();
+
+        LoginResponse response =
+                LoginResponse.builder()
+                        .username(result.getUsername())
+                        .email(result.getEmail())
                         .build();
 
         return ResponseEntity
@@ -76,8 +85,10 @@ public class AuthController {
                         ApiResponse
                                 .<LoginResponse>builder()
                                 .status(200)
-                                .message("Đăng nhập thành công")
-                                .data(loginResponse)
+                                .message(
+                                        "Đăng nhập thành công"
+                                )
+                                .data(response)
                                 .build()
                 );
     }
