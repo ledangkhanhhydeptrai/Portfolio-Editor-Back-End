@@ -28,7 +28,7 @@ public class SocialLinkController {
         this.socialLinkService = socialLinkService;
     }
 
-    @GetMapping("/public/social_link")
+    @GetMapping("/public/social-link")
     public ResponseEntity<ApiResponse<List<SocialLinkResponse>>> getAllSocialLink() {
         return ResponseEntity.ok(socialLinkService.getAllSocialLink());
     }
@@ -45,7 +45,7 @@ public class SocialLinkController {
         return ResponseEntity.ok(socialLinkService.getSocialLinkByUser(id));
     }
 
-    @GetMapping("/public/social_link/{id}")
+    @GetMapping("/public/social-link/{id}")
     public ResponseEntity<ApiResponse<SocialLinkResponse>> getSocialLinkById(@PathVariable UUID id) {
         return ResponseEntity.ok(socialLinkService.getSocialLinkById(id));
     }
