@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Repository
 public interface ExperienceRepository extends JpaRepository<Experience, UUID> {
-    List<Experience> findAllByOrderByDisplayOrderAsc(User user);
+    List<Experience> findAllByUserOrderByDisplayOrderAsc(User user);
 
     Optional<Experience> findByIdAndUser(UUID id, User user);
 }

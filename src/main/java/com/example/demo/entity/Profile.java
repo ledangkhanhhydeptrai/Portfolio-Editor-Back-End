@@ -41,4 +41,12 @@ public class Profile {
             unique = true
     )
     private User user;
+    @Column(length = 255)
+    private String workDirection;
+
+    @Column(length = 255)
+    private String availabilityStatus;
+
+    @Column(columnDefinition = "TEXT")
+    private String quote;
 }

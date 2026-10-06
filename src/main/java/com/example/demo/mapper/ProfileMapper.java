@@ -21,6 +21,9 @@ public class ProfileMapper {
                 .jobTitle(profile.getJobTitle())
                 .location(profile.getLocation())
                 .shortDescription(profile.getShortDescription())
+                .workDirection(profile.getWorkDirection())
+                .availabilityStatus(profile.getAvailabilityStatus())
+                .quote(profile.getQuote())
                 .build();
     }
 }

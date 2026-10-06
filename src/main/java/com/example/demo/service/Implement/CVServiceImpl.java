@@ -183,7 +183,8 @@ public class CVServiceImpl implements CVService {
 
     @Override
     public ApiResponse<Void> deleteCV(UUID id) {
-        CV cv = cvRepository.findById(id)
+        User user = authService.getCurrentUser();
+        CV cv = cvRepository.findByIdAndUser(id, user)
                 .orElseThrow(() -> new BadRequestException("CV not found"));
         cvRepository.delete(cv);
         return ApiResponse.<Void>builder()

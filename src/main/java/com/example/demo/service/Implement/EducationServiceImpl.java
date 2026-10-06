@@ -101,9 +101,9 @@ public class EducationServiceImpl implements EducationService {
 
     @Override
     public ApiResponse<EducationResponse> updateEducation(UUID id, CreateEducationRequest request) {
-        Education education = educationRepository.findById(id)
-                .orElseThrow(() -> new BadRequestException("Education Not Found"));
         User user = authService.getCurrentUser();
+        Education education = educationRepository.findByIdAndUserOrderByDisplayOrderAsc(id, user)
+                .orElseThrow(() -> new BadRequestException("Education Not Found"));
         education.setUser(user);
         education.setDegree(request.getDegree());
         education.setDescription(request.getDescription());
@@ -123,7 +123,8 @@ public class EducationServiceImpl implements EducationService {
 
     @Override
     public ApiResponse<Void> deleteEducation(UUID id) {
-        Education education = educationRepository.findById(id).orElseThrow(() -> new BadRequestException("Education Not Found"));
+        User user = authService.getCurrentUser();
+        Education education = educationRepository.findByIdAndUserOrderByDisplayOrderAsc(id, user).orElseThrow(() -> new BadRequestException("Education Not Found"));
         educationRepository.delete(education);
         return ApiResponse.<Void>builder()
                 .status(200)
