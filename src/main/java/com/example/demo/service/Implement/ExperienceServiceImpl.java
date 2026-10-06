@@ -43,7 +43,7 @@ public class ExperienceServiceImpl implements ExperienceService {
     @Override
     public ApiResponse<List<ExperienceResponse>> getAllExperienceByUser() {
         User user = authService.getCurrentUser();
-        List<Experience> experiences = experienceRepository.findAllByOrderByDisplayOrderAsc(user);
+        List<Experience> experiences = experienceRepository.findAllByUserOrderByDisplayOrderAsc(user);
         List<ExperienceResponse> responses = experiences.stream()
                 .map(experienceMapper::toResponse)
                 .toList();
@@ -129,9 +129,9 @@ public class ExperienceServiceImpl implements ExperienceService {
 
     @Override
     public ApiResponse<ExperienceResponse> updateExperience(UUID id, CreateExperienceRequest request) {
-        Experience experience = experienceRepository.findById(id)
-                .orElseThrow(() -> new BadRequestException("Experience Not Found"));
         User user = authService.getCurrentUser();
+        Experience experience = experienceRepository.findByIdAndUser(id, user)
+                .orElseThrow(() -> new BadRequestException("Experience Not Found"));
         experience.setUser(user);
         experience.setPosition(request.getPosition());
         experience.setCompanyName(request.getCompanyName());
@@ -151,7 +151,8 @@ public class ExperienceServiceImpl implements ExperienceService {
 
     @Override
     public ApiResponse<Void> deleteExperience(UUID id) {
-        Experience experience = experienceRepository.findById(id).orElseThrow(() -> new BadRequestException("Experience Not Found"));
+        User user = authService.getCurrentUser();
+        Experience experience = experienceRepository.findByIdAndUser(id, user).orElseThrow(() -> new BadRequestException("Experience Not Found"));
         experienceRepository.delete(experience);
         return ApiResponse.<Void>builder()
                 .status(200)

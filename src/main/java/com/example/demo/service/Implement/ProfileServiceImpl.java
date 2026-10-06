@@ -47,6 +47,7 @@ public class ProfileServiceImpl implements ProfileService {
                 .data(response)
                 .build();
     }
+
     @Override
     public ApiResponse<ProfileResponse> getPublicProfile() {
 
@@ -65,6 +66,7 @@ public class ProfileServiceImpl implements ProfileService {
                 .data(response)
                 .build();
     }
+
     @Override
     public ApiResponse<ProfileResponse> getProfileByUser() {
         User user = authService.getCurrentUser();
@@ -89,6 +91,9 @@ public class ProfileServiceImpl implements ProfileService {
         profile.setEmail(updateProfileRequest.getEmail());
         profile.setPhone(updateProfileRequest.getPhone());
         profile.setLocation(updateProfileRequest.getLocation());
+        profile.setWorkDirection(updateProfileRequest.getWorkDirection());
+        profile.setAvailabilityStatus(updateProfileRequest.getAvailabilityStatus());
+        profile.setQuote(updateProfileRequest.getQuote());
         Profile savedProfile = profileRepository.save(profile);
         ProfileResponse profileResponse = profileMapper.toProfileResponse(savedProfile);
         return ApiResponse.<ProfileResponse>builder()
@@ -118,6 +123,9 @@ public class ProfileServiceImpl implements ProfileService {
                 .shortDescription(createProfileRequest.getShortDescription())
                 .aboutMe(createProfileRequest.getAboutMe())
                 .cvUrl(createProfileRequest.getCvUrl())
+                .availabilityStatus(createProfileRequest.getAvailabilityStatus())
+                .quote(createProfileRequest.getQuote())
+                .workDirection(createProfileRequest.getWorkDirection())
                 .user(user)
                 .build();
         try {

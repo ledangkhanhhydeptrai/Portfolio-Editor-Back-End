@@ -108,9 +108,9 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ApiResponse<ProjectResponse> updateProject(UUID id, CreateProjectRequest request, MultipartFile thumbnailUrl) {
-        Project project = projectRepository.findById(id)
-                .orElseThrow(() -> new BadRequestException("Project Not Found"));
         User user = authService.getCurrentUser();
+        Project project = projectRepository.findByIdAndUser(id, user)
+                .orElseThrow(() -> new BadRequestException("Project Not Found"));
         project.setUser(user);
         project.setDisplayOrder(request.getDisplayOrder());
         project.setDescription(request.getDescription());
@@ -136,7 +136,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ApiResponse<Void> deleteProject(UUID id) {
-        Project project = projectRepository.findById(id).orElseThrow(() -> new BadRequestException("Project Not Found"));
+        User user = authService.getCurrentUser();
+        Project project = projectRepository.findByIdAndUser(id, user).orElseThrow(() -> new BadRequestException("Project Not Found"));
         projectRepository.delete(project);
         return ApiResponse.<Void>builder()
                 .status(200)

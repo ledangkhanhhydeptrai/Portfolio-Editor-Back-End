@@ -115,9 +115,9 @@ public class SkillServiceImpl implements SkillService {
 
     @Override
     public ApiResponse<SkillResponse> updateSkill(UpdateSkillRequest request, UUID id, MultipartFile iconUrl) {
-        Skill skill = skillRepository.findById(id)
-                .orElseThrow(() -> new BadRequestException("Skill Not Found"));
         User user = authService.getCurrentUser();
+        Skill skill = skillRepository.findByIdAndUser(id, user)
+                .orElseThrow(() -> new BadRequestException("Skill Not Found"));
         skill.setUser(user);
         skill.setDisplayOrder(request.getDisplayOrder());
         skill.setName(request.getName());
@@ -139,7 +139,8 @@ public class SkillServiceImpl implements SkillService {
 
     @Override
     public ApiResponse<Void> deleteSkill(UUID id) {
-        Skill skill = skillRepository.findById(id)
+        User user = authService.getCurrentUser();
+        Skill skill = skillRepository.findByIdAndUser(id, user)
                 .orElseThrow(() -> new BadRequestException("Skill Not Found"));
         skillRepository.delete(skill);
         return ApiResponse.<Void>builder()

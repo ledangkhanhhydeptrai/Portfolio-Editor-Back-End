@@ -115,9 +115,9 @@ public class SocialLinkServiceImpl implements SocialLinkService {
 
     @Override
     public ApiResponse<SocialLinkResponse> updateSocialLink(UUID id, UpdateSocialLinkRequest request, MultipartFile iconUrl) {
-        SocialLink socialLink = socialLinkRepository.findById(id)
-                .orElseThrow(() -> new BadRequestException("Social Link Not Found"));
         User user = authService.getCurrentUser();
+        SocialLink socialLink = socialLinkRepository.findByIdAndUser(id, user)
+                .orElseThrow(() -> new BadRequestException("Social Link Not Found"));
         socialLink.setUser(user);
         socialLink.setDisplayOrder(request.getDisplayOrder());
         socialLink.setPlatform(request.getPlatform());
@@ -139,7 +139,8 @@ public class SocialLinkServiceImpl implements SocialLinkService {
 
     @Override
     public ApiResponse<Void> deleteSocialLink(UUID id) {
-        SocialLink socialLink = socialLinkRepository.findById(id).orElseThrow(() -> new BadRequestException("Social Link Not Found"));
+        User user = authService.getCurrentUser();
+        SocialLink socialLink = socialLinkRepository.findByIdAndUser(id, user).orElseThrow(() -> new BadRequestException("Social Link Not Found"));
         socialLinkRepository.delete(socialLink);
         return ApiResponse.<Void>builder()
                 .status(200)

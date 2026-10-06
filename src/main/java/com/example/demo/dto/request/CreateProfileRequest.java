@@ -34,4 +34,7 @@ public class CreateProfileRequest {
             format = "binary"
     )
     private MultipartFile avatarUrl;
+    private String workDirection;
+    private String availabilityStatus;
+    private String quote;
 }
