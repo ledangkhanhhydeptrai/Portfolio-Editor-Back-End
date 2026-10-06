@@ -144,7 +144,8 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(
                 List.of(
                         "http://localhost:3000",
-                        "http://localhost:8080"
+                        "http://localhost:8080",
+                        "https://portfolioeditorfrontend.vercel.app/"
                 )
         );
 
