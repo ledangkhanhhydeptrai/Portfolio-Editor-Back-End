@@ -14,6 +14,6 @@ public interface DirectionRepository
     List<Direction> findAllByOrderByDisplayOrderAsc();
 
     List<Direction> findAllByUserOrderByDisplayOrderAsc(User user);
-
+    Optional<Direction> findFirstByUser_EmailOrderByDisplayOrderAsc(String email);
     Optional<Direction> findByIdAndUser(UUID id, User user);
 }

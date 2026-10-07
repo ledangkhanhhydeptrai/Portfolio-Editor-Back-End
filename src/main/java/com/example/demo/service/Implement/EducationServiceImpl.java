@@ -10,6 +10,7 @@ import com.example.demo.repository.EducationRepository;
 import com.example.demo.response.ApiResponse;
 import com.example.demo.service.Interface.AuthService;
 import com.example.demo.service.Interface.EducationService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +18,8 @@ import java.util.UUID;
 
 @Service
 public class EducationServiceImpl implements EducationService {
+    @Value("${portfolio.owner.email}")
+    private String portfolioOwnerEmail;
     private final EducationRepository educationRepository;
     private final EducationMapper educationMapper;
     private final AuthService authService;
@@ -28,12 +31,12 @@ public class EducationServiceImpl implements EducationService {
     }
 
     @Override
-    public ApiResponse<List<EducationResponse>> getAllEducation() {
-        List<Education> educations = educationRepository.findAll();
-        List<EducationResponse> responses = educations.stream()
-                .map(educationMapper::toEducationResponse)
-                .toList();
-        return ApiResponse.<List<EducationResponse>>builder()
+    public ApiResponse<EducationResponse> getAllEducation() {
+        Education educations = educationRepository.findFirstByUser_EmailOrderByDisplayOrderAsc(portfolioOwnerEmail)
+                .orElseThrow(() -> new BadRequestException("Education not found"));
+        EducationResponse responses = educationMapper.toEducationResponse(educations);
+
+        return ApiResponse.<EducationResponse>builder()
                 .status(200)
                 .message("Get All Education Successfully")
                 .data(responses)

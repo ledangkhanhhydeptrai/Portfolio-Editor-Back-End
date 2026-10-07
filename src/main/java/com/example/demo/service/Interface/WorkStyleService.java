@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface WorkStyleService {
 
-    ApiResponse<List<WorkStyleResponse>> getAllWorkStyle();
+    ApiResponse<WorkStyleResponse> getAllWorkStyle();
 
     ApiResponse<List<WorkStyleResponse>> getAllWorkStyleByUser();
 

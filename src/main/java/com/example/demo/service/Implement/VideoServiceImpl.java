@@ -14,17 +14,18 @@ import com.example.demo.service.Interface.AuthService;
 import com.example.demo.service.Interface.CloudinaryService;
 import com.example.demo.service.Interface.VideoService;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class VideoServiceImpl
         implements VideoService {
+    @Value("${portfolio.owner.email}")
+    private String portfolioOwnerEmail;
 
     private final VideoRepository videoRepository;
     private final VideoMapper videoMapper;
@@ -51,26 +52,21 @@ public class VideoServiceImpl
     }
 
     @Override
-    public ApiResponse<List<VideoResponse>>
+    public ApiResponse<VideoResponse>
     getAllVideo() {
 
-        List<Video> videos =
-                videoRepository.findAll();
-
-        List<VideoResponse> responses =
-                videos.stream()
-                        .map(
-                                videoMapper::toVideoResponse
-                        )
-                        .toList();
-
-        return ApiResponse
-                .<List<VideoResponse>>builder()
-                .status(200)
-                .message(
-                        "Get All Video Successfully"
+        Video video = videoRepository
+                .findFirstByUser_EmailOrderByDisplayOrderAsc(
+                        portfolioOwnerEmail
                 )
-                .data(responses)
+                .orElseThrow(() -> new BadRequestException("Public Video Not Found"));
+
+        VideoResponse response = videoMapper.toVideoResponse(video);
+
+        return ApiResponse.<VideoResponse>builder()
+                .status(200)
+                .message("Get Public Video Successfully")
+                .data(response)
                 .build();
     }
 

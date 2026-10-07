@@ -11,6 +11,7 @@ import com.example.demo.response.ApiResponse;
 import com.example.demo.service.Interface.AuthService;
 import com.example.demo.service.Interface.CVService;
 import com.example.demo.service.Interface.CloudinaryService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +20,8 @@ import java.util.UUID;
 
 @Service
 public class CVServiceImpl implements CVService {
+    @Value("${portfolio.owner.email}")
+    private String portfolioOwnerEmail;
     private final CVRepository cvRepository;
     private final CVMapper cvMapper;
     private final AuthService authService;
@@ -32,10 +35,11 @@ public class CVServiceImpl implements CVService {
     }
 
     @Override
-    public ApiResponse<List<CVResponse>> getAllCV() {
-        List<CV> cv = cvRepository.findAllByOrderByDisplayOrderAsc();
-        List<CVResponse> response = cv.stream().map(cvMapper::toCVResponse).toList();
-        return ApiResponse.<List<CVResponse>>builder()
+    public ApiResponse<CVResponse> getAllCV() {
+        CV cv = cvRepository.findFirstByUser_EmailOrderByDisplayOrderAsc(portfolioOwnerEmail)
+                .orElseThrow(()->new BadRequestException("CV Not Found"));
+        CVResponse response = cvMapper.toCVResponse(cv);
+        return ApiResponse.<CVResponse>builder()
                 .status(200)
                 .message("Get All CV Successfully")
                 .data(response)

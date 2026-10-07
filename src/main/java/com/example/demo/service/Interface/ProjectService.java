@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ProjectService {
-    ApiResponse<List<ProjectResponse>> getAllProject();
+    ApiResponse<ProjectResponse> getAllProject();
 
     ApiResponse<ProjectResponse> getProjectById(UUID id);
 

@@ -10,6 +10,7 @@ import com.example.demo.repository.ExperienceRepository;
 import com.example.demo.response.ApiResponse;
 import com.example.demo.service.Interface.AuthService;
 import com.example.demo.service.Interface.ExperienceService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +18,8 @@ import java.util.UUID;
 
 @Service
 public class ExperienceServiceImpl implements ExperienceService {
+    @Value("${portfolio.owner.email}")
+    private String portfolioOwnerEmail;
     private final ExperienceRepository experienceRepository;
     private final ExperienceMapper experienceMapper;
     private final AuthService authService;
@@ -28,12 +31,11 @@ public class ExperienceServiceImpl implements ExperienceService {
     }
 
     @Override
-    public ApiResponse<List<ExperienceResponse>> getAllExperience() {
-        List<Experience> experiences = experienceRepository.findAll();
-        List<ExperienceResponse> responses = experiences.stream()
-                .map(experienceMapper::toResponse)
-                .toList();
-        return ApiResponse.<List<ExperienceResponse>>builder()
+    public ApiResponse<ExperienceResponse> getAllExperience() {
+        Experience experiences = experienceRepository.findFirstByUser_EmailOrderByDisplayOrderAsc(portfolioOwnerEmail)
+                .orElseThrow(() -> new BadRequestException("Experience not found"));
+        ExperienceResponse responses = experienceMapper.toResponse(experiences);
+        return ApiResponse.<ExperienceResponse>builder()
                 .status(200)
                 .message("Get All Experience Successfully")
                 .data(responses)

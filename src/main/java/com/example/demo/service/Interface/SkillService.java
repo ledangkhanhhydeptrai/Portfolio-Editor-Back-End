@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface SkillService {
-    ApiResponse<List<SkillResponse>> getAllSkill();
+    ApiResponse<SkillResponse> getAllSkill();
 
     ApiResponse<SkillResponse> getSkillById(UUID id);
 

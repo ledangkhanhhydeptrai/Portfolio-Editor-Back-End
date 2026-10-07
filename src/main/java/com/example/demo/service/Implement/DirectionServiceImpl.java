@@ -12,6 +12,7 @@ import com.example.demo.repository.SkillRepository;
 import com.example.demo.response.ApiResponse;
 import com.example.demo.service.Interface.AuthService;
 import com.example.demo.service.Interface.DirectionService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ public class DirectionServiceImpl implements DirectionService {
     private final DirectionMapper directionMapper;
 
     private final AuthService authService;
+    @Value("${portfolio.owner.email}")
+    private String portfolioOwnerEmail;
 
     public DirectionServiceImpl(
             DirectionRepository directionRepository,
@@ -40,16 +43,15 @@ public class DirectionServiceImpl implements DirectionService {
     }
 
     @Override
-    public ApiResponse<List<DirectionResponse>> getAllDirection() {
+    public ApiResponse<DirectionResponse> getAllDirection() {
 
-        List<Direction> directions =
-                directionRepository.findAllByOrderByDisplayOrderAsc();
+        Direction directions =
+                directionRepository.findFirstByUser_EmailOrderByDisplayOrderAsc(portfolioOwnerEmail)
+                        .orElseThrow(() -> new BadRequestException("Public Direction Not Found"));
 
-        List<DirectionResponse> responses = directions.stream()
-                .map(directionMapper::toResponse)
-                .toList();
+        DirectionResponse responses = directionMapper.toResponse(directions);
 
-        return ApiResponse.<List<DirectionResponse>>builder()
+        return ApiResponse.<DirectionResponse>builder()
                 .status(200)
                 .message("Get All Direction Successfully")
                 .data(responses)

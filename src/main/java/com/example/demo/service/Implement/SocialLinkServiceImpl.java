@@ -12,6 +12,7 @@ import com.example.demo.response.ApiResponse;
 import com.example.demo.service.Interface.AuthService;
 import com.example.demo.service.Interface.CloudinaryService;
 import com.example.demo.service.Interface.SocialLinkService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,6 +22,8 @@ import java.util.UUID;
 
 @Service
 public class SocialLinkServiceImpl implements SocialLinkService {
+    @Value("${portfolio.owner.email}")
+    private String portfolioOwnerEmail;
     private final SocialLinkRepository socialLinkRepository;
     private final SocialLinkMapper socialLinkMapper;
     private final AuthService authService;
@@ -34,12 +37,13 @@ public class SocialLinkServiceImpl implements SocialLinkService {
     }
 
     @Override
-    public ApiResponse<List<SocialLinkResponse>> getAllSocialLink() {
-        List<SocialLink> socialLinks = socialLinkRepository.findAllByOrderByDisplayOrderAsc();
-        List<SocialLinkResponse> socialLinkResponses = socialLinks.stream()
-                .map(socialLinkMapper::toSocialLinkResponse)
-                .toList();
-        return ApiResponse.<List<SocialLinkResponse>>builder()
+    public ApiResponse<SocialLinkResponse> getAllSocialLink() {
+        SocialLink socialLinks = socialLinkRepository
+                .findFirstByUser_EmailOrderByDisplayOrderAsc(portfolioOwnerEmail)
+                .orElseThrow(() -> new BadRequestException("Social Link Public Not Found"));
+        SocialLinkResponse socialLinkResponses =
+                socialLinkMapper.toSocialLinkResponse(socialLinks);
+        return ApiResponse.<SocialLinkResponse>builder()
                 .status(200)
                 .message("Get All Social Link Successfully")
                 .data(socialLinkResponses)

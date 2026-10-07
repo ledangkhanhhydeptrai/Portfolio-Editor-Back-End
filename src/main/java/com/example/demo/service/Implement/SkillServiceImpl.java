@@ -12,6 +12,7 @@ import com.example.demo.response.ApiResponse;
 import com.example.demo.service.Interface.AuthService;
 import com.example.demo.service.Interface.CloudinaryService;
 import com.example.demo.service.Interface.SkillService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +22,8 @@ import java.util.UUID;
 
 @Service
 public class SkillServiceImpl implements SkillService {
+    @Value("${portfolio.owner.email}")
+    private String portfolioOwnerEmail;
     private final SkillRepository skillRepository;
     private final SkillMapper skillMapper;
     private final CloudinaryService cloudinaryService;
@@ -34,12 +37,13 @@ public class SkillServiceImpl implements SkillService {
     }
 
     @Override
-    public ApiResponse<List<SkillResponse>> getAllSkill() {
-        List<Skill> skills = skillRepository.findAllByOrderByDisplayOrderAsc();
-        List<SkillResponse> responses = skills.stream()
-                .map(skillMapper::toSkillResponse)
-                .toList();
-        return ApiResponse.<List<SkillResponse>>builder()
+    public ApiResponse<SkillResponse> getAllSkill() {
+        Skill skills = skillRepository.findFirstByUser_EmailOrderByDisplayOrderAsc(portfolioOwnerEmail)
+                .orElseThrow(() -> new BadRequestException("Skill Public not found"));
+        SkillResponse responses =
+                skillMapper.toSkillResponse(skills);
+
+        return ApiResponse.<SkillResponse>builder()
                 .status(200)
                 .message("Get All Skill Successfully")
                 .data(responses)

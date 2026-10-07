@@ -26,7 +26,7 @@ public class ExperienceController {
     }
 
     @GetMapping("/public/experience")
-    public ResponseEntity<ApiResponse<List<ExperienceResponse>>> getAllExperience() {
+    public ResponseEntity<ApiResponse<ExperienceResponse>> getAllExperience() {
         return ResponseEntity.ok(experienceService.getAllExperience());
     }
 

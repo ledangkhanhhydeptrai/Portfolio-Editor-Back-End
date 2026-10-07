@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface SocialLinkService {
-    ApiResponse<List<SocialLinkResponse>> getAllSocialLink();
+    ApiResponse<SocialLinkResponse> getAllSocialLink();
 
     ApiResponse<SocialLinkResponse> getSocialLinkById(UUID id);
 

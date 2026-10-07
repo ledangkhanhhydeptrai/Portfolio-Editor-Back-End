@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface CVService {
-    ApiResponse<List<CVResponse>> getAllCV();
+    ApiResponse<CVResponse> getAllCV();
 
     ApiResponse<CVResponse> getCVById(UUID id);
 

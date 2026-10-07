@@ -29,7 +29,7 @@ public class SocialLinkController {
     }
 
     @GetMapping("/public/social-link")
-    public ResponseEntity<ApiResponse<List<SocialLinkResponse>>> getAllSocialLink() {
+    public ResponseEntity<ApiResponse<SocialLinkResponse>> getAllSocialLink() {
         return ResponseEntity.ok(socialLinkService.getAllSocialLink());
     }
 

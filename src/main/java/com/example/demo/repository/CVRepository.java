@@ -13,6 +13,8 @@ public interface CVRepository
 
     List<CV> findAllByOrderByDisplayOrderAsc();
 
+    Optional<CV> findFirstByUser_EmailOrderByDisplayOrderAsc(String email);
+
     Optional<CV> findByIdAndUser(
             UUID id,
             User user

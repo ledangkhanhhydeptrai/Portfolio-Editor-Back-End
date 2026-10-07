@@ -17,5 +17,7 @@ public interface SkillRepository extends JpaRepository<Skill, UUID> {
 
     List<Skill> findAllByUserOrderByDisplayOrderAsc(User user);
 
+    Optional<Skill> findFirstByUser_EmailOrderByDisplayOrderAsc(String email);
+
     Optional<Skill> findByIdAndUser(UUID id, User user);
 }

@@ -14,6 +14,6 @@ public interface SocialLinkRepository extends JpaRepository<SocialLink, UUID> {
     List<SocialLink> findAllByOrderByDisplayOrderAsc();
 
     List<SocialLink> findAllByUserOrderByDisplayOrderAsc(User user);
-
+    Optional<SocialLink> findFirstByUser_EmailOrderByDisplayOrderAsc(String email);
     Optional<SocialLink> findByIdAndUser(UUID id, User user);
 }

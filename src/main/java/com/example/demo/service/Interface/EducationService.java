@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface EducationService {
-    ApiResponse<List<EducationResponse>> getAllEducation();
+    ApiResponse<EducationResponse> getAllEducation();
 
     ApiResponse<EducationResponse> getEducationById(UUID id);
 
