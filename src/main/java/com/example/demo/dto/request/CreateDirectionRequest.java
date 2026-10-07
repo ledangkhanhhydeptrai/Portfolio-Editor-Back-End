@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -33,5 +34,5 @@ public class CreateDirectionRequest {
     @Min(value = 0, message = "Display order must be greater than or equal to 0")
     private Integer displayOrder;
 
-    private List<String> skills;
+    private List<UUID> skills;
 }

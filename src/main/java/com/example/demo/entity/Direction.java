@@ -35,14 +35,9 @@ public class Direction {
     @Column(nullable = false)
     private Integer displayOrder;
 
-    @ElementCollection
-    @CollectionTable(
-            name = "direction_skills",
-            joinColumns = @JoinColumn(name = "direction_id")
-    )
-    @Column(name = "skill_name")
+    @OneToMany(mappedBy = "direction")
     @Builder.Default
-    private List<String> skills = new ArrayList<>();
+    private List<Skill> skills = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

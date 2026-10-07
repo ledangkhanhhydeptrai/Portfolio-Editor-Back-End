@@ -25,5 +25,5 @@ public class DirectionResponse {
 
     private Integer displayOrder;
 
-    private List<String> skills;
+    private List<SkillResponse> skills;
 }
