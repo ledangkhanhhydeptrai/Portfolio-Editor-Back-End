@@ -3,10 +3,12 @@ package com.example.demo.service.Implement;
 import com.example.demo.dto.request.CreateDirectionRequest;
 import com.example.demo.dto.response.DirectionResponse;
 import com.example.demo.entity.Direction;
+import com.example.demo.entity.Skill;
 import com.example.demo.entity.User;
 import com.example.demo.exception.BadRequestException;
 import com.example.demo.mapper.DirectionMapper;
 import com.example.demo.repository.DirectionRepository;
+import com.example.demo.repository.SkillRepository;
 import com.example.demo.response.ApiResponse;
 import com.example.demo.service.Interface.AuthService;
 import com.example.demo.service.Interface.DirectionService;
@@ -18,7 +20,7 @@ import java.util.UUID;
 
 @Service
 public class DirectionServiceImpl implements DirectionService {
-
+    private final SkillRepository skillRepository;
     private final DirectionRepository directionRepository;
 
     private final DirectionMapper directionMapper;
@@ -28,11 +30,13 @@ public class DirectionServiceImpl implements DirectionService {
     public DirectionServiceImpl(
             DirectionRepository directionRepository,
             DirectionMapper directionMapper,
-            AuthService authService
+            AuthService authService,
+            SkillRepository skillRepository
     ) {
         this.directionRepository = directionRepository;
         this.directionMapper = directionMapper;
         this.authService = authService;
+        this.skillRepository = skillRepository;
     }
 
     @Override
@@ -118,11 +122,15 @@ public class DirectionServiceImpl implements DirectionService {
     public ApiResponse<DirectionResponse> createDirection(
             CreateDirectionRequest request
     ) {
+        List<Skill> skills =
+                skillRepository.findAllById(request.getSkills());
 
         User user = authService.getCurrentUser();
 
         Direction direction = new Direction();
-
+        for (Skill skill : skills) {
+            skill.setDirection(direction);
+        }
         direction.setUser(user);
         direction.setCode(request.getCode());
         direction.setIcon(request.getIcon());
@@ -132,7 +140,7 @@ public class DirectionServiceImpl implements DirectionService {
 
         if (request.getSkills() != null) {
             direction.setSkills(
-                    new ArrayList<>(request.getSkills())
+                    skills
             );
         } else {
             direction.setSkills(new ArrayList<>());
@@ -156,7 +164,8 @@ public class DirectionServiceImpl implements DirectionService {
             UUID id,
             CreateDirectionRequest request
     ) {
-
+        List<Skill> skills =
+                skillRepository.findAllById(request.getSkills());
         User user = authService.getCurrentUser();
 
         Direction direction = directionRepository
@@ -175,7 +184,7 @@ public class DirectionServiceImpl implements DirectionService {
 
         if (request.getSkills() != null) {
             direction.setSkills(
-                    new ArrayList<>(request.getSkills())
+                    skills
             );
         } else {
             direction.setSkills(new ArrayList<>());
