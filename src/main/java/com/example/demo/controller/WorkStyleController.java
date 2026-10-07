@@ -26,7 +26,7 @@ public class WorkStyleController {
     }
 
     @GetMapping("/public/work-style")
-    public ResponseEntity<ApiResponse<List<WorkStyleResponse>>>
+    public ResponseEntity<ApiResponse<WorkStyleResponse>>
     getAllWorkStyle() {
 
         return ResponseEntity.ok(

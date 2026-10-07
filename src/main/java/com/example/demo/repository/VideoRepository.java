@@ -15,7 +15,7 @@ public interface VideoRepository extends JpaRepository<Video, UUID> {
             User user,
             String title
     );
-
+    Optional<Video> findFirstByUser_EmailOrderByDisplayOrderAsc(String email);
     List<Video> findAllByUserOrderByDisplayOrderAsc(User user);
 
     Optional<Video> findByIdAndUser(UUID id, User user);

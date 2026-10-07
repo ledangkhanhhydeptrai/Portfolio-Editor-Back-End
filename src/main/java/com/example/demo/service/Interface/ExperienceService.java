@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ExperienceService {
-    ApiResponse<List<ExperienceResponse>> getAllExperience();
+    ApiResponse<ExperienceResponse> getAllExperience();
 
     ApiResponse<ExperienceResponse> getExperienceById(UUID id);
 

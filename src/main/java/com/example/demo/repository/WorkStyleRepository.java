@@ -16,7 +16,7 @@ public interface WorkStyleRepository
     List<WorkStyle> findAllByUserOrderByDisplayOrderAsc(
             User user
     );
-
+    Optional<WorkStyle> findFirstByUser_EmailOrderByDisplayOrderAsc(String email);
     Optional<WorkStyle> findByIdAndUser(
             UUID id,
             User user

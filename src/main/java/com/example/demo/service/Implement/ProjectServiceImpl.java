@@ -11,6 +11,7 @@ import com.example.demo.response.ApiResponse;
 import com.example.demo.service.Interface.AuthService;
 import com.example.demo.service.Interface.CloudinaryService;
 import com.example.demo.service.Interface.ProjectService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +20,8 @@ import java.util.UUID;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
+    @Value("${portfolio.owner.email}")
+    private String portfolioOwnerEmail;
     private final ProjectRepository projectRepository;
     private final ProjectMapper projectMapper;
     private final CloudinaryService cloudinaryService;
@@ -32,10 +35,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ApiResponse<List<ProjectResponse>> getAllProject() {
-        List<Project> projects = projectRepository.findAllByOrderByDisplayOrderAsc();
-        List<ProjectResponse> response = projects.stream().map(projectMapper::toProjectResponse).toList();
-        return ApiResponse.<List<ProjectResponse>>builder()
+    public ApiResponse<ProjectResponse> getAllProject() {
+        Project projects = projectRepository.findFirstByUser_EmailOrderByDisplayOrderAsc(portfolioOwnerEmail)
+                .orElseThrow(() -> new BadRequestException("Project Public Not Found"));
+        ProjectResponse response = projectMapper.toProjectResponse(projects);
+        return ApiResponse.<ProjectResponse>builder()
                 .status(200)
                 .message("Get All Project Successfully")
                 .data(response)

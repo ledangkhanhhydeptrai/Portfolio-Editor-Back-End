@@ -26,7 +26,7 @@ public class ProjectController {
     }
 
     @GetMapping("/public/projects")
-    public ResponseEntity<ApiResponse<List<ProjectResponse>>> getAllProject() {
+    public ResponseEntity<ApiResponse<ProjectResponse>> getAllProject() {
         return ResponseEntity.ok(projectService.getAllProject());
     }
 

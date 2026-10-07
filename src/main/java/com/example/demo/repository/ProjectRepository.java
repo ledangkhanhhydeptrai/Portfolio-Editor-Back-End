@@ -15,5 +15,7 @@ public interface ProjectRepository extends JpaRepository<Project, UUID> {
 
     List<Project> findAllByUserOrderByDisplayOrderAsc(User user);
 
+    Optional<Project> findFirstByUser_EmailOrderByDisplayOrderAsc(String email);
+
     Optional<Project> findByIdAndUser(UUID id, User user);
 }

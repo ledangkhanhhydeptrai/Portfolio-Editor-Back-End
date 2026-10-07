@@ -13,5 +13,7 @@ import java.util.UUID;
 public interface EducationRepository extends JpaRepository<Education, UUID> {
     List<Education> findAllByUserOrderByDisplayOrderAsc(User user);
 
+    Optional<Education> findFirstByUser_EmailOrderByDisplayOrderAsc(String email);
+
     Optional<Education> findByIdAndUserOrderByDisplayOrderAsc(UUID id, User user);
 }

@@ -29,7 +29,7 @@ public class SkillController {
     }
 
     @GetMapping("/public/skill")
-    public ResponseEntity<ApiResponse<List<SkillResponse>>> getAllSkill() {
+    public ResponseEntity<ApiResponse<SkillResponse>> getAllSkill() {
         return ResponseEntity.ok(skillService.getAllSkill());
     }
 

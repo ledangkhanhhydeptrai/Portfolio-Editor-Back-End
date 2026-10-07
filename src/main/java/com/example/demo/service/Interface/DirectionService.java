@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface DirectionService {
 
-    ApiResponse<List<DirectionResponse>> getAllDirection();
+    ApiResponse<DirectionResponse> getAllDirection();
 
     ApiResponse<List<DirectionResponse>> getAllDirectionByUser();
 

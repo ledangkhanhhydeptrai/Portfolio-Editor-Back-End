@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface VideoService {
-    ApiResponse<List<VideoResponse>> getAllVideo();
+    ApiResponse<VideoResponse> getAllVideo();
 
     ApiResponse<VideoResponse>
     createVideo(

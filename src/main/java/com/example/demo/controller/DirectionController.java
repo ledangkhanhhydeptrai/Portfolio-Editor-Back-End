@@ -26,7 +26,7 @@ public class DirectionController {
     }
 
     @GetMapping("/public/direction")
-    public ResponseEntity<ApiResponse<List<DirectionResponse>>>
+    public ResponseEntity<ApiResponse<DirectionResponse>>
     getAllDirection() {
 
         return ResponseEntity.ok(

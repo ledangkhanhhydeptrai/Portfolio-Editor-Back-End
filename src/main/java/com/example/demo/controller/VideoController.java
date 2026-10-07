@@ -39,7 +39,7 @@ public class VideoController {
 
     @GetMapping("/public/video")
     public ResponseEntity<
-            ApiResponse<List<VideoResponse>>
+            ApiResponse<VideoResponse>
             > getAllVideos() {
 
         return ResponseEntity.ok(

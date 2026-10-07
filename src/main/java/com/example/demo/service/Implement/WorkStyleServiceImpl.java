@@ -10,6 +10,7 @@ import com.example.demo.repository.WorkStyleRepository;
 import com.example.demo.response.ApiResponse;
 import com.example.demo.service.Interface.AuthService;
 import com.example.demo.service.Interface.WorkStyleService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +25,8 @@ public class WorkStyleServiceImpl
     private final WorkStyleMapper workStyleMapper;
 
     private final AuthService authService;
+    @Value("${portfolio.owner.email}")
+    private String portfolioOwnerEmail;
 
     public WorkStyleServiceImpl(
             WorkStyleRepository workStyleRepository,
@@ -36,20 +39,18 @@ public class WorkStyleServiceImpl
     }
 
     @Override
-    public ApiResponse<List<WorkStyleResponse>>
+    public ApiResponse<WorkStyleResponse>
     getAllWorkStyle() {
 
-        List<WorkStyle> workStyles =
+        WorkStyle workStyles =
                 workStyleRepository
-                        .findAllByOrderByDisplayOrderAsc();
+                        .findFirstByUser_EmailOrderByDisplayOrderAsc(portfolioOwnerEmail)
+                        .orElseThrow(() -> new BadRequestException("Public Work Style Not Found"));;
 
-        List<WorkStyleResponse> responses =
-                workStyles.stream()
-                        .map(workStyleMapper::toResponse)
-                        .toList();
+        WorkStyleResponse responses = workStyleMapper.toResponse(workStyles);
 
         return ApiResponse
-                .<List<WorkStyleResponse>>builder()
+                .<WorkStyleResponse>builder()
                 .status(200)
                 .message("Get All Work Style Successfully")
                 .data(responses)

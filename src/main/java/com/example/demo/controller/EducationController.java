@@ -25,7 +25,7 @@ public class EducationController {
     }
 
     @GetMapping("/public/education")
-    public ResponseEntity<ApiResponse<List<EducationResponse>>> getAllEducation() {
+    public ResponseEntity<ApiResponse<EducationResponse>> getAllEducation() {
         return ResponseEntity.ok(educationService.getAllEducation());
     }
 

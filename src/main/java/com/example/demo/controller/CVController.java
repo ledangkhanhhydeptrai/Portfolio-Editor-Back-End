@@ -27,7 +27,7 @@ public class CVController {
     }
 
     @GetMapping("/public/CV")
-    public ResponseEntity<ApiResponse<List<CVResponse>>> getAllCV() {
+    public ResponseEntity<ApiResponse<CVResponse>> getAllCV() {
         return ResponseEntity.ok(cvService.getAllCV());
     }
 
