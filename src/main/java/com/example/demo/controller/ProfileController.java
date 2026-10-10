@@ -52,7 +52,7 @@ public class ProfileController {
         return ResponseEntity.ok(profileService.getProfileByUser());
     }
 
-    @PutMapping("/profile")
+    @PutMapping("/user/profile")
     public ResponseEntity<ApiResponse<ProfileResponse>> updateProfile(@RequestBody UpdateProfileRequest updateProfileRequest) {
         return ResponseEntity.ok(profileService.updateProfileByUser(updateProfileRequest));
     }

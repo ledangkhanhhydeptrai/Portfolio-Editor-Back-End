@@ -73,7 +73,7 @@ public class VideoController {
     )
     @PreAuthorize("hasRole('USER')")
     @PostMapping(
-            value = "/video",
+            value = "/user/video",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
     public ResponseEntity<ApiResponse<VideoResponse>> createVideo(
@@ -111,13 +111,13 @@ public class VideoController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @PutMapping(value = "/video/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/user/video/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<VideoResponse>> updateVideo(@PathVariable UUID id, @Valid @ModelAttribute UpdateVideoRequest request) {
         return ResponseEntity.ok(videoService.updateVideoByUser(id, request));
     }
 
     @PreAuthorize("hasRole('USER')")
-    @DeleteMapping("/video/{id}")
+    @DeleteMapping("/user/video/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteVideoById(@PathVariable UUID id) {
         return ResponseEntity.ok(videoService.deleteVideoByUser(id));
     }

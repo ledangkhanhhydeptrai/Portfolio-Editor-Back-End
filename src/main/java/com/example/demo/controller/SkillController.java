@@ -51,21 +51,21 @@ public class SkillController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @PostMapping(value = "/create-skill", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/user/create-skill", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<SkillResponse>> createSkill(@Valid @ModelAttribute CreateSkillRequest request,
                                                                   @RequestPart(value = "iconUrl", required = false) MultipartFile iconUrl) {
         return ResponseEntity.ok(skillService.createSkill(request, iconUrl));
     }
 
     @PreAuthorize("hasRole('USER')")
-    @PutMapping(value = "/update-skill/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/user/update-skill/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<SkillResponse>> updateSkill(@PathVariable UUID id,
                                                                   @Valid @ModelAttribute UpdateSkillRequest request, @RequestPart(value = "iconUrl", required = false) MultipartFile iconUrl) {
         return ResponseEntity.ok(skillService.updateSkill(request, id, iconUrl));
     }
 
     @PreAuthorize("hasRole('USER')")
-    @DeleteMapping("/delete-skill/{id}")
+    @DeleteMapping("/user/delete-skill/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteSkill(@PathVariable UUID id) {
         return ResponseEntity.ok(skillService.deleteSkill(id));
     }

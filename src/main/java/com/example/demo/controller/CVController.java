@@ -49,19 +49,19 @@ public class CVController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @PostMapping(value = "/create-CV", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/user/create-CV", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<CVResponse>> createCV(@Valid @ModelAttribute CreateCVRequest request) {
         return ResponseEntity.ok(cvService.createCV(request));
     }
 
     @PreAuthorize("hasRole('USER')")
-    @PutMapping(value = "/create-cv/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/user/create-cv/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<CVResponse>> updateCV(@PathVariable UUID id, @Valid @ModelAttribute CreateCVRequest request) {
         return ResponseEntity.ok(cvService.updateCV(id, request));
     }
 
     @PreAuthorize("hasRole('USER')")
-    @DeleteMapping("/delete-CV/{id}")
+    @DeleteMapping("/user/delete-CV/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteCV(@PathVariable UUID id) {
         return ResponseEntity.ok(cvService.deleteCV(id));
     }
