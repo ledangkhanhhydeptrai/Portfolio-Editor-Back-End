@@ -48,19 +48,19 @@ public class ExperienceController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @PostMapping("/create-experience")
+    @PostMapping("/user/create-experience")
     public ResponseEntity<ApiResponse<ExperienceResponse>> createExperience(@Valid @RequestBody CreateExperienceRequest request) {
         return ResponseEntity.ok(experienceService.createExperience(request));
     }
 
     @PreAuthorize("hasRole('USER')")
-    @PutMapping("/update-experience/{id}")
+    @PutMapping("/user/update-experience/{id}")
     public ResponseEntity<ApiResponse<ExperienceResponse>> updateExperience(@PathVariable UUID id, @Valid @RequestBody CreateExperienceRequest request) {
         return ResponseEntity.ok(experienceService.updateExperience(id, request));
     }
 
     @PreAuthorize("hasRole('USER')")
-    @DeleteMapping("/delete-experience/{id}")
+    @DeleteMapping("/user/delete-experience/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteExperience(@PathVariable UUID id) {
         return ResponseEntity.ok(experienceService.deleteExperience(id));
     }
