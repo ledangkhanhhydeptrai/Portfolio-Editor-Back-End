@@ -3,15 +3,12 @@ package com.example.demo.controller;
 import com.example.demo.dto.request.*;
 import com.example.demo.dto.response.LoginResponse;
 import com.example.demo.dto.response.LoginServiceResult;
-import com.example.demo.dto.response.LoginUserResponse;
 import com.example.demo.dto.response.VerifyOtpResponse;
 import com.example.demo.response.ApiResponse;
 import com.example.demo.service.Interface.ChangePasswordService;
 import com.example.demo.service.Interface.LoginService;
 import com.example.demo.service.Interface.RegisterService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -50,7 +47,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<LoginResponse>> login(
+    public ResponseEntity<ApiResponse<Void>> login(
             @RequestBody LoginRequest request
     ) {
 
@@ -82,13 +79,13 @@ public class AuthController {
                         accessTokenCookie.toString()
                 )
                 .body(
-                        ApiResponse
-                                .<LoginResponse>builder()
+                        ApiResponse.<Void>
+                                        builder()
                                 .status(200)
                                 .message(
                                         "Đăng nhập thành công"
                                 )
-                                .data(response)
+                                .data(null)
                                 .build()
                 );
     }
