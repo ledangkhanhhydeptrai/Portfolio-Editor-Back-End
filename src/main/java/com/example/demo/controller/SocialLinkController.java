@@ -41,7 +41,7 @@ public class SocialLinkController {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/user/social-link/{id}")
-    public ResponseEntity<ApiResponse<SocialLinkResponse>> getSocialLinkByUser(UUID id) {
+    public ResponseEntity<ApiResponse<SocialLinkResponse>> getSocialLinkByUser(@PathVariable UUID id) {
         return ResponseEntity.ok(socialLinkService.getSocialLinkByUser(id));
     }
 
@@ -51,7 +51,7 @@ public class SocialLinkController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @PostMapping(value = "/user/create-social-link", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/user/social-link", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<SocialLinkResponse>> createSocialLink(@Valid @ModelAttribute CreateSocialLinkRequest request, @RequestPart(
             value = "iconUrl",
             required = false
@@ -61,14 +61,14 @@ public class SocialLinkController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @PutMapping(value = "/user/update-social-link/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/user/social-link/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<SocialLinkResponse>> updateSocialLink(@Valid @ModelAttribute UpdateSocialLinkRequest request, @PathVariable UUID id, @RequestPart(value = "iconUrl",
             required = false) MultipartFile iconUrl) {
         return ResponseEntity.ok(socialLinkService.updateSocialLink(id, request, iconUrl));
     }
 
     @PreAuthorize("hasRole('USER')")
-    @DeleteMapping("/user/delete-social-link/{id}")
+    @DeleteMapping("/user/social-link/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteSocialLink(@PathVariable UUID id) {
         return ResponseEntity.ok(socialLinkService.deleteSocialLink(id));
     }
