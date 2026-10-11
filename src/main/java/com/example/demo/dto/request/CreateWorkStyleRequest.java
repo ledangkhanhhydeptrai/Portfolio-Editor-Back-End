@@ -18,6 +18,8 @@ public class CreateWorkStyleRequest {
     @Size(max = 255, message = "Title must not exceed 255 characters")
     private String title;
 
+    @NotBlank(message = "Description is required")
+    @Size(max = 500, message = "Description must not exceed 500 characters")
     private String description;
 
     @NotNull(message = "Display order is required")
