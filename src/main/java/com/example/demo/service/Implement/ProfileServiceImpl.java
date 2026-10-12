@@ -70,7 +70,7 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public ApiResponse<ProfileResponse> getProfileByUser() {
         User user = authService.getCurrentUser();
-        Profile profile = profileRepository.findByUser(user).orElseThrow(() -> new BadRequestException("Profile Not Found"));
+        Profile profile = profileRepository.findByUser(user).orElse(null);
         ProfileResponse profileResponse = profileMapper.toProfileResponse(profile);
         return ApiResponse.<ProfileResponse>builder()
                 .status(200)
