@@ -47,7 +47,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<Void>> login(
+    public ResponseEntity<ApiResponse<LoginResponse>> login(
             @RequestBody LoginRequest request
     ) {
 
@@ -70,6 +70,7 @@ public class AuthController {
                 LoginResponse.builder()
                         .username(result.getUsername())
                         .email(result.getEmail())
+                        .role(result.getRole())
                         .build();
 
         return ResponseEntity
@@ -79,13 +80,13 @@ public class AuthController {
                         accessTokenCookie.toString()
                 )
                 .body(
-                        ApiResponse.<Void>
+                        ApiResponse.<LoginResponse>
                                         builder()
                                 .status(200)
                                 .message(
                                         "Đăng nhập thành công"
                                 )
-                                .data(null)
+                                .data(response)
                                 .build()
                 );
     }

@@ -1,5 +1,7 @@
 package com.example.demo.dto.response;
 
+import com.example.demo.Enum.RoleEnum;
+import com.example.demo.entity.Role;
 import lombok.*;
 
 @Getter
@@ -14,4 +16,5 @@ public class LoginServiceResult {
 
     private String username;
     private String email;
+    private RoleEnum role;
 }
