@@ -140,7 +140,7 @@ public class ProfileServiceImpl implements ProfileService {
                 profileMapper.toProfileResponse(savedProfile);
 
         return ApiResponse.<ProfileResponse>builder()
-                .status(201)
+                .status(200)
                 .message("Create Profile Successfully")
                 .data(profileResponse)
                 .build();

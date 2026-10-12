@@ -69,6 +69,11 @@ public class LoginServiceImpl implements LoginService {
                 .refreshToken(refreshToken)
                 .username(user.getUsername())
                 .email(user.getEmail())
+                .role(
+                        user.getRole() != null
+                                ? user.getRole().getName()
+                                : null
+                )
                 .build();
     }
 }
