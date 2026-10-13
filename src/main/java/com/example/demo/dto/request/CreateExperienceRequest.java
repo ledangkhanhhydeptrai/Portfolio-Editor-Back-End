@@ -37,14 +37,9 @@ public class CreateExperienceRequest {
     private Integer displayOrder;
 
     @NotNull(message = "Start date is required")
-    @PastOrPresent(
-            message = "Start date cannot be in the future"
-    )
+
     private LocalDate startDate;
 
-    @PastOrPresent(
-            message = "End date cannot be in the future"
-    )
     private LocalDate endDate;
 
     @NotNull(message = "Current status is required")

@@ -48,7 +48,7 @@ public class ProjectController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @PostMapping(value = "/user/create-project", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/user/project", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<ProjectResponse>> createProject(@Valid @ModelAttribute CreateProjectRequest request, @RequestPart(value = "thumbnailUrl", required = false) MultipartFile thumbnailUrl) {
         return ResponseEntity.ok(projectService.createProject(request, thumbnailUrl));
     }
