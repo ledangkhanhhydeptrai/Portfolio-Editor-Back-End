@@ -54,13 +54,13 @@ public class ProjectController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @PutMapping(value = "/user/update-project/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/user/project/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<ProjectResponse>> updateProject(@PathVariable UUID id, @Valid @ModelAttribute CreateProjectRequest request, @RequestPart(value = "thumbnailUrl", required = false) MultipartFile thumbnailUrl) {
         return ResponseEntity.ok(projectService.updateProject(id, request, thumbnailUrl));
     }
 
     @PreAuthorize("hasRole('USER')")
-    @DeleteMapping("/user/delete-project/{id}")
+    @DeleteMapping("/user/project/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteProject(@PathVariable UUID id) {
         return ResponseEntity.ok(projectService.deleteProject(id));
     }
