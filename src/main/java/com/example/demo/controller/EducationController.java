@@ -42,24 +42,24 @@ public class EducationController {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/user/education/{id}")
-    public ResponseEntity<ApiResponse<EducationResponse>> getAllEducationByUserId(UUID id) {
+    public ResponseEntity<ApiResponse<EducationResponse>> getAllEducationByUserId(@PathVariable UUID id) {
         return ResponseEntity.ok(educationService.getAllEducationByUserId(id));
     }
 
     @PreAuthorize("hasRole('USER')")
-    @PostMapping("/user/create-education")
+    @PostMapping("/user/education")
     public ResponseEntity<ApiResponse<EducationResponse>> createEducation(@RequestBody CreateEducationRequest request) {
         return ResponseEntity.ok(educationService.createEducation(request));
     }
 
     @PreAuthorize("hasRole('USER')")
-    @PutMapping("/user/update-education/{id}")
+    @PutMapping("/user/education/{id}")
     public ResponseEntity<ApiResponse<EducationResponse>> updateEducation(@PathVariable UUID id, @RequestBody CreateEducationRequest request) {
         return ResponseEntity.ok(educationService.updateEducation(id, request));
     }
 
     @PreAuthorize("hasRole('USER')")
-    @DeleteMapping("/user/delete-education/{id}")
+    @DeleteMapping("/user/education/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteEducation(@PathVariable UUID id) {
         return ResponseEntity.ok(educationService.deleteEducation(id));
     }
