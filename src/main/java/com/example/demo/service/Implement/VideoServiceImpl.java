@@ -76,114 +76,135 @@ public class VideoServiceImpl
             MultipartFile videoFile,
             MultipartFile thumbnailFile
     ) {
+        System.out.println("\n========== 1. START CREATE VIDEO ==========");
+
+        System.out.println("Title: " + request.getTitle());
+        System.out.println("Description: " + request.getDescription());
+        System.out.println("Category: " + request.getCategory());
+        System.out.println("Display Order: " + request.getDisplayOrder());
+        System.out.println("Year: " + request.getYear());
+
+        System.out.println("Video File: " +
+                (videoFile != null ? videoFile.getOriginalFilename() : "NULL"));
+
+        System.out.println("Video Empty: " +
+                (videoFile == null || videoFile.isEmpty()));
+
+        System.out.println("Thumbnail File: " +
+                (thumbnailFile != null ? thumbnailFile.getOriginalFilename() : "NULL"));
+
+        System.out.println("Thumbnail Empty: " +
+                (thumbnailFile == null || thumbnailFile.isEmpty()));
 
         if (videoFile == null || videoFile.isEmpty()) {
-            throw new BadRequestException(
-                    "Video file is required"
-            );
+            System.err.println("[ERROR] Video file is missing");
+            throw new BadRequestException("Video file is required");
         }
 
         if (thumbnailFile == null || thumbnailFile.isEmpty()) {
-            throw new BadRequestException(
-                    "Thumbnail file is required"
-            );
+            System.err.println("[ERROR] Thumbnail file is missing");
+            throw new BadRequestException("Thumbnail file is required");
         }
 
-        User user =
-                authService.getCurrentUser();
+        System.out.println("\n========== 2. GET CURRENT USER ==========");
 
-        Video video =
-                new Video();
-        if (videoRepository.existsByUserAndTitleIgnoreCase(user, request.getTitle().trim())) {
-            throw new BadRequestException(
-                    "Video already exists");
+        User user = authService.getCurrentUser();
+
+        System.out.println("User ID: " + user.getId());
+        System.out.println("User Email: " + user.getEmail());
+
+        Video video = new Video();
+
+        System.out.println("\n========== 3. CHECK DUPLICATE TITLE ==========");
+
+        String title = request.getTitle().trim();
+
+        System.out.println("Checking title: " + title);
+
+        if (videoRepository.existsByUserAndTitleIgnoreCase(user, title)) {
+            System.err.println("[ERROR] Video title already exists");
+            throw new BadRequestException("Video already exists");
         }
-        video.setCategory(
-                request.getCategory()
-        );
 
-        video.setDescription(
-                request.getDescription()
-        );
+        System.out.println("Duplicate check passed");
 
-        video.setDisplayOrder(
-                request.getDisplayOrder()
-        );
+        video.setCategory(request.getCategory());
+        video.setDescription(request.getDescription());
+        video.setDisplayOrder(request.getDisplayOrder());
+        video.setTitle(request.getTitle());
+        video.setYear(request.getYear());
+        video.setUser(user);
 
-        video.setTitle(
-                request.getTitle()
-        );
-
-        video.setYear(
-                request.getYear()
-        );
-
-        video.setUser(
-                user
-        );
+        System.out.println("\n========== 4. UPLOAD VIDEO ==========");
 
         try {
-
             CloudinaryVideoResponse upload =
-                    cloudinaryService.uploadVideo(
-                            videoFile
-                    );
+                    cloudinaryService.uploadVideo(videoFile);
 
-            video.setVideoUrl(
-                    upload.getUrl()
-            );
+            System.out.println("Video upload success");
+            System.out.println("Video URL: " + upload.getUrl());
+            System.out.println("Video Duration: " + upload.getDuration());
 
-            video.setDuration(
-                    formatDuration(
-                            upload.getDuration()
-                    )
-            );
+            video.setVideoUrl(upload.getUrl());
+            video.setDuration(formatDuration(upload.getDuration()));
+
+            System.out.println("Formatted Duration: " + video.getDuration());
 
         } catch (Exception e) {
+            System.err.println("[ERROR] UPLOAD VIDEO FAILED");
+            e.printStackTrace();
 
-            throw new RuntimeException(
-                    "Upload Video Error",
-                    e
-            );
+            throw new RuntimeException("Upload Video Error", e);
         }
+
+        System.out.println("\n========== 5. UPLOAD THUMBNAIL ==========");
 
         try {
-
             String thumbnailUrl =
-                    cloudinaryService.uploadImage(
-                            thumbnailFile
-                    );
+                    cloudinaryService.uploadImage(thumbnailFile);
 
-            video.setThumbnailUrl(
-                    thumbnailUrl
-            );
+            System.out.println("Thumbnail upload success");
+            System.out.println("Thumbnail URL: " + thumbnailUrl);
+
+            video.setThumbnailUrl(thumbnailUrl);
 
         } catch (Exception e) {
+            System.err.println("[ERROR] UPLOAD THUMBNAIL FAILED");
+            e.printStackTrace();
 
-            throw new RuntimeException(
-                    "Upload Thumbnail Error",
-                    e
-            );
+            throw new RuntimeException("Upload Thumbnail Error", e);
         }
 
-        Video saved =
-                videoRepository.save(
-                        video
-                );
+        System.out.println("\n========== 6. SAVE DATABASE ==========");
 
-        VideoResponse response =
-                videoMapper.toVideoResponse(
-                        saved
-                );
+        Video saved = videoRepository.save(video);
 
-        return ApiResponse
+        System.out.println("Database save success");
+        System.out.println("Saved ID: " + saved.getId());
+        System.out.println("Saved Title: " + saved.getTitle());
+        System.out.println("Saved Video URL: " + saved.getVideoUrl());
+        System.out.println("Saved Thumbnail URL: " + saved.getThumbnailUrl());
+
+        System.out.println("\n========== 7. MAP RESPONSE ==========");
+
+        VideoResponse response = videoMapper.toVideoResponse(saved);
+
+        System.out.println("Response mapped successfully");
+        System.out.println("Response: " + response);
+
+        ApiResponse<VideoResponse> result = ApiResponse
                 .<VideoResponse>builder()
                 .status(200)
-                .message(
-                        "Create Video Successfully"
-                )
+                .message("Create Video Successfully")
                 .data(response)
                 .build();
+
+        System.out.println("\n========== 8. CREATE VIDEO SUCCESS ==========");
+        System.out.println("Status: " + result.getStatus());
+        System.out.println("Message: " + result.getMessage());
+        System.out.println("============================================\n");
+
+        return result;
     }
 
 
