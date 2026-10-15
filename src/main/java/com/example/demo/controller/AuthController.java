@@ -60,7 +60,7 @@ public class AuthController {
                                 result.getAccessToken()
                         )
                         .httpOnly(true)
-                        .secure(false)
+                        .secure(true)
                         .sameSite("Lax")
                         .path("/")
                         .maxAge(Duration.ofHours(1))
