@@ -134,62 +134,47 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public CorsConfigurationSource
-    corsConfigurationSource() {
+   @Bean
+public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
 
-        CorsConfiguration configuration =
-                new CorsConfiguration();
+    configuration.setAllowedOrigins(
+            List.of(
+                    "http://localhost:3000",
+                    "https://portfolioeditorfrontend.vercel.app",
+                    "https://khanhhy-portfolio.vercel.app",
+                    "https://portfolio-editor-front-end-react.vercel.app"
+            )
+    );
 
-        configuration.setAllowedOrigins(
-                List.of(
-                        "http://localhost:3000",
-                        "http://localhost:8080",
-                        "https://portfolioeditorfrontend.vercel.app",
-                        "https://khanhhy-portfolio.vercel.app",
-                        "https://portfolio-editor-front-end-react.vercel.app"
-                )
-        );
+    configuration.setAllowedMethods(
+            List.of(
+                    "GET",
+                    "POST",
+                    "PUT",
+                    "PATCH",
+                    "DELETE",
+                    "OPTIONS"
+            )
+    );
 
-        configuration.setAllowedMethods(
-                List.of(
-                        "GET",
-                        "POST",
-                        "PUT",
-                        "PATCH",
-                        "DELETE",
-                        "OPTIONS"
-                )
-        );
+    configuration.setAllowedHeaders(
+            List.of(
+                    "Authorization",
+                    "Content-Type",
+                    "Accept"
+            )
+    );
 
-        configuration.setAllowedHeaders(
-                List.of(
-                        "Authorization",
-                        "Content-Type",
-                        "Accept"
-                )
-        );
+    configuration.setAllowCredentials(true);
 
-        configuration.setExposedHeaders(
-                List.of(
-                        "Authorization"
-                )
-        );
+    UrlBasedCorsConfigurationSource source =
+            new UrlBasedCorsConfigurationSource();
 
-        configuration.setAllowCredentials(
-                true
-        );
+    source.registerCorsConfiguration("/**", configuration);
 
-        UrlBasedCorsConfigurationSource source =
-                new UrlBasedCorsConfigurationSource();
-
-        source.registerCorsConfiguration(
-                "/**",
-                configuration
-        );
-
-        return source;
-    }
+    return source;
+}
 
     @Bean
     public PasswordEncoder passwordEncoder() {
