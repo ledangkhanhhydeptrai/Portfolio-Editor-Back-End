@@ -145,9 +145,9 @@ public class SecurityConfig {
                 List.of(
                         "http://localhost:3000",
                         "http://localhost:8080",
-                        "https://portfolioeditorfrontend.vercel.app/",
+                        "https://portfolioeditorfrontend.vercel.app",
                         "https://khanhhy-portfolio.vercel.app",
-                        "https://portfolio-editor-front-end-react.vercel.app/"
+                        "https://portfolio-editor-front-end-react.vercel.app"
                 )
         );
 
