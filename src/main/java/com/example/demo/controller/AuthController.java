@@ -99,7 +99,7 @@ public class AuthController {
                                 ""
                         )
                         .httpOnly(true)
-                        .secure(false)
+                        .secure(true)
                         .sameSite("Lax")
                         .path("/")
                         .maxAge(Duration.ZERO)
