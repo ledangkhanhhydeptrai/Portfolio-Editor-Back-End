@@ -41,7 +41,7 @@ public class Profile {
             unique = true
     )
     private User user;
-    @Column(length = 255)
+    @Column(name = "work_direction", columnDefinition = "TEXT")
     private String workDirection;
 
     @Column(length = 255)
